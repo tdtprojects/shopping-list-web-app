@@ -5,7 +5,7 @@ import classNames from "classnames";
 import Checkbox from "./Checkbox";
 import styles from "./styles.module.scss";
 
-const Task = ({ task, index, isDesktop, handleTaskRemove }) => {
+const Task = ({ item, index, isDesktop, handleItemRemove, lastItemRef, isLast }) => {
   const dragIconWrapperClassList = classNames(styles.dragIconWrapper, {
     [styles.dragIconWrapper__isDesktop]: isDesktop,
   });
@@ -14,7 +14,7 @@ const Task = ({ task, index, isDesktop, handleTaskRemove }) => {
   });
 
   return (
-    <Draggable draggableId={task.id} index={index}>
+    <Draggable draggableId={item.id} index={index}>
       {(provided, snapshot) => {
         const rootClassList = classNames(styles.root, {
           [styles.root__isDragging]: snapshot.isDragging,
@@ -43,11 +43,12 @@ const Task = ({ task, index, isDesktop, handleTaskRemove }) => {
               aria-multiline="true"
               spellCheck="false"
               suppressContentEditableWarning={true}
+              ref={isLast ? lastItemRef : null}
             >
-              {task.content}
+              {item.text}
             </div>
             <span className={styles.closeIconWrapper}>
-              <Close onClick={() => handleTaskRemove(task.id)} />
+              <Close onClick={() => handleItemRemove(item.id)} />
             </span>
           </div>
         );

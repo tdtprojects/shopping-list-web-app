@@ -1,10 +1,11 @@
 import classNames from "classnames";
 
+import NewTask from "./TaskList/NewTask";
 import StrictModeDroppable from "./StrictModeDroppable";
 import TaskList from "./TaskList";
 import styles from "./styles.module.scss";
 
-const Column = ({ column, tasks, isDesktop, handleTaskRemove }) => {
+const Column = ({ column, items, isDesktop, handleItemRemove, handleNewItemInput, lastItemRef }) => {
   const rootClassList = classNames(styles.root, {
     [styles.root__isDesktop]: isDesktop,
   });
@@ -21,8 +22,14 @@ const Column = ({ column, tasks, isDesktop, handleTaskRemove }) => {
 
           return (
             <div className={taskListClassList} {...provided.droppableProps} ref={provided.innerRef}>
-              <TaskList tasks={tasks} isDesktop={isDesktop} handleTaskRemove={handleTaskRemove} />
+              <TaskList
+                items={items}
+                isDesktop={isDesktop}
+                handleItemRemove={handleItemRemove}
+                lastItemRef={lastItemRef}
+              />
               {provided.placeholder}
+              <NewTask handleNewItemInput={handleNewItemInput} />
             </div>
           );
         }}

@@ -1,0 +1,42 @@
+.root {
+  background-color: #f6e2dd;
+  position: relative;
+}
+
+.plusIconWrapper {
+  position: absolute;
+  left: 26px;
+  color: rgb(85, 85, 85);
+
+  svg {
+    margin-top: 5px;
+  }
+}
+
+.content {
+  min-height: 29px;
+  padding: 5px 45px 5px 60px;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5rem;
+  text-align: start;
+  outline: none;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  // background-color: transparent;
+
+  &:focus {
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  }
+}
+
+.placeholder {
+  position: absolute;
+  top: 6px;
+  left: 61px;
+  user-select: none;
+  pointer-events: none;
+  color: lighten($color: #202124, $amount: 5);
+  // z-index: -1;
+}
