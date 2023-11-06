@@ -65,7 +65,7 @@ const ShoppingListPage: FC = () => {
   return (
     shoppingList.items.length > 0 && (
       <SortableList
-        items={shoppingList.items}
+        itemList={shoppingList.items}
         title={shoppingList.title}
         isDesktop={isDesktop}
         shoppingListId={shoppingList.id}

@@ -1,35 +1,46 @@
+import type { FC, Ref } from "react";
 import classNames from "classnames";
 
-import NewTask from "./TaskList/NewTask";
+import NewItem from "./ItemList/NewItem";
 import StrictModeDroppable from "./StrictModeDroppable";
-import TaskList from "./TaskList";
+import ItemList from "./ItemList";
+import type { ShoppingListItem, Column as ColumnType } from "@/shared/types";
 import styles from "./styles.module.scss";
 
-const Column = ({ column, items, isDesktop, handleItemRemove, handleNewItemInput, lastItemRef }) => {
+interface Props {
+  itemList: ShoppingListItem[];
+  isDesktop: boolean;
+  lastItemRef: Ref<HTMLDivElement>;
+  column: ColumnType;
+  handleItemRemove: (itemId: string) => void;
+  handleNewItemInput: (e: React.ChangeEvent<HTMLDivElement>) => void;
+}
+
+const Column: FC<Props> = (props) => {
   const rootClassList = classNames(styles.root, {
-    [styles.root__isDesktop]: isDesktop,
+    [styles.root__isDesktop]: props.isDesktop,
   });
 
   return (
     <div className={rootClassList}>
-      <h3 className={styles.title}>{column.title}</h3>
-      <StrictModeDroppable droppableId={column.id}>
+      <h3 className={styles.title}>{props.column.title}</h3>
+      <StrictModeDroppable droppableId={props.column.id}>
         {(provided, snapshot) => {
           const taskListClassList = classNames(styles.taskList, {
-            [styles.taskList__isDesktop]: isDesktop,
+            [styles.taskList__isDesktop]: props.isDesktop,
             [styles.taskList__isDraggingOver]: snapshot.isDraggingOver,
           });
 
           return (
             <div className={taskListClassList} {...provided.droppableProps} ref={provided.innerRef}>
-              <TaskList
-                items={items}
-                isDesktop={isDesktop}
-                handleItemRemove={handleItemRemove}
-                lastItemRef={lastItemRef}
+              <ItemList
+                itemList={props.itemList}
+                isDesktop={props.isDesktop}
+                handleItemRemove={props.handleItemRemove}
+                lastItemRef={props.lastItemRef}
               />
               {provided.placeholder}
-              <NewTask handleNewItemInput={handleNewItemInput} />
+              <NewItem handleNewItemInput={props.handleNewItemInput} />
             </div>
           );
         }}

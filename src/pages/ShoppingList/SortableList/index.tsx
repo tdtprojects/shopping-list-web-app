@@ -2,12 +2,12 @@ import { type FC, useState, useRef, useEffect } from "react";
 import { DragDropContext, type DropResult } from "react-beautiful-dnd";
 import { v4 } from "uuid";
 
-import type { ShoppingListItem } from "@/shared/types";
+import type { ShoppingListItem, Column as ColumnType } from "@/shared/types";
 
 import Column from "./Column";
 
 interface Props {
-  items: ShoppingListItem[];
+  itemList: ShoppingListItem[];
   title: string;
   shoppingListId: string;
   isDesktop: boolean;
@@ -16,12 +16,12 @@ interface Props {
 }
 
 const SortableList: FC<Props> = (props) => {
-  const [shoppingListItems, setShoppingListItems] = useState<ShoppingListItem[]>(props.items);
+  const [shoppingListItems, setShoppingListItems] = useState<ShoppingListItem[]>(props.itemList);
   const prevShoppingListItemsRef = useRef<ShoppingListItem[]>([]);
   const lastItemRef = useRef<HTMLDivElement>(null);
   const isFirstRender = useRef(true);
 
-  const column = {
+  const column: ColumnType = {
     id: props.shoppingListId,
     title: props.title,
   };
@@ -98,7 +98,7 @@ const SortableList: FC<Props> = (props) => {
       <Column
         key={column.id}
         column={column}
-        items={shoppingListItems}
+        itemList={shoppingListItems}
         isDesktop={props.isDesktop}
         handleItemRemove={handleItemRemove}
         handleNewItemInput={handleNewItemInput}

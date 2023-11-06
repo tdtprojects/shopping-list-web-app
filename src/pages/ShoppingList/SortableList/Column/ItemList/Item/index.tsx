@@ -1,20 +1,34 @@
+import { type FC, type Ref, useCallback } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { DragIndicator, Close } from "@mui/icons-material";
 import classNames from "classnames";
 
 import Checkbox from "./Checkbox";
+import type { ShoppingListItem } from "@/shared/types";
 import styles from "./styles.module.scss";
 
-const Task = ({ item, index, isDesktop, handleItemRemove, lastItemRef, isLast }) => {
+interface Props {
+  item: ShoppingListItem;
+  index: number;
+  isDesktop: boolean;
+  isLast: boolean;
+  lastItemRef: Ref<HTMLDivElement>;
+  handleItemRemove: (itemId: string) => void;
+}
+
+const Item: FC<Props> = (props) => {
+  const handleRemove = useCallback(() => {
+    props.handleItemRemove(props.item.id);
+  }, [props.handleItemRemove, props.item.id]);
   const dragIconWrapperClassList = classNames(styles.dragIconWrapper, {
-    [styles.dragIconWrapper__isDesktop]: isDesktop,
+    [styles.dragIconWrapper__isDesktop]: props.isDesktop,
   });
   const contentClassList = classNames(styles.content, {
-    [styles.content__isDesktop]: isDesktop,
+    [styles.content__isDesktop]: props.isDesktop,
   });
 
   return (
-    <Draggable draggableId={item.id} index={index}>
+    <Draggable draggableId={props.item.id} index={props.index}>
       {(provided, snapshot) => {
         const rootClassList = classNames(styles.root, {
           [styles.root__isDragging]: snapshot.isDragging,
@@ -36,19 +50,19 @@ const Task = ({ item, index, isDesktop, handleItemRemove, lastItemRef, isLast })
             <span {...provided.dragHandleProps} className={dragIconWrapperClassList}>
               <DragIndicator />
             </span>
-            <Checkbox index={index} />
+            <Checkbox index={props.index} />
             <div
               className={contentClassList}
               contentEditable="true"
               aria-multiline="true"
               spellCheck="false"
               suppressContentEditableWarning={true}
-              ref={isLast ? lastItemRef : null}
+              ref={props.isLast ? props.lastItemRef : null}
             >
-              {item.text}
+              {props.item.text}
             </div>
             <span className={styles.closeIconWrapper}>
-              <Close onClick={() => handleItemRemove(item.id)} />
+              <Close onClick={handleRemove} />
             </span>
           </div>
         );
@@ -57,4 +71,4 @@ const Task = ({ item, index, isDesktop, handleItemRemove, lastItemRef, isLast })
   );
 };
 
-export default Task;
+export default Item;

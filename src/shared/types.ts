@@ -10,3 +10,8 @@ export interface ShoppingList {
   title: string;
   items: ShoppingListItem[];
 }
+
+export interface Column {
+  id: string;
+  title: string;
+}

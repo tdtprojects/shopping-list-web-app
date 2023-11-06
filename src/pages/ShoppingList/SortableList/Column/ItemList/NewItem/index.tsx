@@ -1,9 +1,13 @@
+import type { FC } from "react";
 import AddIcon from "@mui/icons-material/Add";
 
 import styles from "./styles.module.scss";
-// type Props = {}
 
-const NewTask = ({ handleNewItemInput }) => {
+interface Props {
+  handleNewItemInput: (e: React.ChangeEvent<HTMLDivElement>) => void;
+}
+
+const NewItem: FC<Props> = (props) => {
   return (
     <div className={styles.root}>
       <span className={styles.plusIconWrapper}>
@@ -15,12 +19,11 @@ const NewTask = ({ handleNewItemInput }) => {
         aria-multiline="true"
         spellCheck="false"
         suppressContentEditableWarning={true}
-        onInput={handleNewItemInput}
-      >
-      </div>
+        onInput={props.handleNewItemInput}
+      ></div>
       <span className={styles.placeholder}>List item</span>
     </div>
   );
 };
 
-export default NewTask;
+export default NewItem;
