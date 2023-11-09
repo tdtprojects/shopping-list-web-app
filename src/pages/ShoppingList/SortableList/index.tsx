@@ -51,7 +51,7 @@ const SortableList: FC<Props> = (props) => {
 
     prevShoppingListItemsRef.current = shoppingListItems;
 
-    if (savedSelectionRef.current !== null) {
+    if (!isNil(savedSelectionRef.current)) {
       restoreSelection(savedSelectionRef.current);
     }
   }, [shoppingListItems]);
@@ -74,7 +74,7 @@ const SortableList: FC<Props> = (props) => {
   const handleDragEnd = (result: DropResult): void => {
     const { destination, source, draggableId } = result;
 
-    if (destination === null || destination === undefined) {
+    if (isNil(destination)) {
       return;
     }
 
@@ -85,15 +85,31 @@ const SortableList: FC<Props> = (props) => {
     const draggableItem = shoppingListItems.find(({ id }) => id === draggableId);
     const updatedShoppingListItems = shoppingListItems.filter((item) => item.id !== draggableId);
 
-    if (draggableItem !== undefined) {
+    if (!isNil(draggableItem)) {
       updatedShoppingListItems.splice(destination.index, 0, draggableItem);
+
+      updatedShoppingListItems.forEach((item, index) => {
+        item.order = index + 1;
+      });
     }
 
     setShoppingListItems(updatedShoppingListItems);
+    debouncedListUpdate(updatedShoppingListItems);
   };
 
   const handleItemRemove = (itemId: string): void => {
-    const updatedShoppingListItems = shoppingListItems.filter(({ id }) => id !== itemId);
+    let order: number = 0;
+    const updatedShoppingListItems = shoppingListItems.reduce(
+      (result: ShoppingListItem[], currentItem) => {
+        if (currentItem.id !== itemId) {
+          order += 1;
+          return [...result, { ...currentItem, order }];
+        } else {
+          return result;
+        }
+      },
+      []
+    );
 
     setShoppingListItems(updatedShoppingListItems);
     debouncedListUpdate(updatedShoppingListItems);
@@ -101,7 +117,6 @@ const SortableList: FC<Props> = (props) => {
 
   const saveSelection = (): SelectionType => {
     const selection = window.getSelection();
-    console.log(selection);
 
     if (!isNil(selection) && !isNil(activeEditableDivRef.current)) {
       const range = selection.getRangeAt(0);
@@ -118,7 +133,10 @@ const SortableList: FC<Props> = (props) => {
   };
 
   const restoreSelection = (savedSelection: { start: number; end: number }): void => {
-    if (!isNil(activeEditableDivRef.current) && (Number(activeEditableDivRef.current.childNodes.length)) > 0) {
+    if (
+      !isNil(activeEditableDivRef.current) &&
+      Number(activeEditableDivRef.current.childNodes.length) > 0
+    ) {
       const { start } = savedSelection;
       const charIndex = 0;
       const range = document.createRange();
@@ -160,8 +178,19 @@ const SortableList: FC<Props> = (props) => {
     debouncedListUpdate(updatedShoppingListItems);
   };
 
+  const handleCheckboxChange = (itemId: string, value: boolean): void => {
+    const updatedShoppingListItems = shoppingListItems.map((item) =>
+      item.id === itemId ? { ...item, checked: value } : item
+    );
+
+    setShoppingListItems(updatedShoppingListItems);
+    debouncedListUpdate(updatedShoppingListItems);
+  };
+
   const handleNewItemInput = (event: React.ChangeEvent<HTMLDivElement>): void => {
-    const maxOrder = Math.max(...shoppingListItems.map(({ order }) => order));
+    const maxOrder =
+      shoppingListItems.length > 0 ? Math.max(...shoppingListItems.map(({ order }) => order)) : 0;
+
     const newItem = {
       checked: false,
       text: event.currentTarget.textContent ?? "",
@@ -187,6 +216,7 @@ const SortableList: FC<Props> = (props) => {
         handleItemRemove={handleItemRemove}
         handleNewItemInput={handleNewItemInput}
         handleItemBlur={handleItemBlur}
+        handleCheckboxChange={handleCheckboxChange}
         lastItemRef={lastItemRef}
       />
     </DragDropContext>

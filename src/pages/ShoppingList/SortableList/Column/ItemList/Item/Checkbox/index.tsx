@@ -1,11 +1,28 @@
-// type Props = {}
+import { type FC, useCallback } from "react";
+
 import styles from "./styles.module.scss";
 
-const Checkbox = ({ index }) => {
+interface Props {
+  id: string;
+  checked: boolean;
+  handleCheckboxChange: (itemId: string, value: boolean) => void;
+}
+
+const Checkbox: FC<Props> = (props) => {
+  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    props.handleCheckboxChange(props.id, event.target.checked);
+  }, [props.id, props.handleCheckboxChange]);
+
   return (
     <div className={styles.checkbox_wrapper}>
-      <input className={styles.inp_cbx} id={index} type="checkbox" />
-      <label className={styles.cbx} htmlFor={index}>
+      <input
+        className={styles.inp_cbx}
+        id={`checkbox-${props.id}`}
+        type="checkbox"
+        onChange={handleChange}
+        checked={props.checked}
+      />
+      <label className={styles.cbx} htmlFor={`checkbox-${props.id}`}>
         <span>
           <svg width="10px" height="8px">
             <use xlinkHref="#check"></use>

@@ -16,6 +16,7 @@ interface Props {
   handleItemInput: (e: React.ChangeEvent<HTMLDivElement>, itemId: string) => void;
   handleNewItemInput: (e: React.ChangeEvent<HTMLDivElement>) => void;
   handleItemBlur: (e: React.ChangeEvent<HTMLDivElement>) => void;
+  handleCheckboxChange: (itemId: string, value: boolean) => void;
 }
 
 const Column: FC<Props> = (props) => {
@@ -41,6 +42,7 @@ const Column: FC<Props> = (props) => {
                 handleItemInput={props.handleItemInput}
                 handleItemRemove={props.handleItemRemove}
                 handleItemBlur={props.handleItemBlur}
+                handleCheckboxChange={props.handleCheckboxChange}
                 lastItemRef={props.lastItemRef}
               />
               {provided.placeholder}

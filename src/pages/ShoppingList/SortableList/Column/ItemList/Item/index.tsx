@@ -16,6 +16,7 @@ interface Props {
   handleItemInput: (e: React.ChangeEvent<HTMLDivElement>, itemId: string) => void;
   handleItemBlur: (e: React.ChangeEvent<HTMLDivElement>) => void;
   handleItemRemove: (itemId: string) => void;
+  handleCheckboxChange: (itemId: string, value: boolean) => void;
 }
 
 const Item: FC<Props> = (props) => {
@@ -60,7 +61,7 @@ const Item: FC<Props> = (props) => {
             <span {...provided.dragHandleProps} className={dragIconWrapperClassList}>
               <DragIndicator />
             </span>
-            <Checkbox index={props.index} />
+            <Checkbox id={props.item.id} handleCheckboxChange={props.handleCheckboxChange} checked={props.item.checked} />
             <div
               className={contentClassList}
               contentEditable="true"
