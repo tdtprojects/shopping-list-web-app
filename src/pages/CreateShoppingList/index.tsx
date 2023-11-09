@@ -28,7 +28,7 @@ const CreateShoppingListPage: FC = () => {
       if (response.ok) {
         const data = await response.json();
 
-        navigate(`/shopping-list/${data._id}`);
+        navigate(`/shopping-list/${data.id}`);
         setShoppingListName("");
       }
     } catch (error) {

@@ -12,9 +12,6 @@ interface Props {
   title: string;
   shoppingListId: string;
   isDesktop: boolean;
-  createShoppingListItem: (item: ShoppingListItem) => Promise<void>;
-  updateShoppingListItem: (item: ShoppingListItem) => Promise<void>;
-  deleteShoppingListItem: (itemId: string) => Promise<void>;
   updateShoppingList: (list: ShoppingListItem[]) => Promise<void>;
 }
 

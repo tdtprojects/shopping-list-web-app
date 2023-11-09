@@ -38,44 +38,6 @@ const ShoppingListPage: FC = () => {
     void fetchShoppingList();
   }, []);
 
-  const createShoppingListItem = async (item: ShoppingListItem): Promise<void> => {
-    try {
-      await fetch(`${API_URL}/shopping-lists/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(item),
-      });
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const updateShoppingListItem = async (item: ShoppingListItem): Promise<void> => {
-    try {
-      await fetch(`${API_URL}/shopping-lists/${id}/${item.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(item),
-      });
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const deleteShoppingListItem = async (itemId: string): Promise<void> => {
-    try {
-      await fetch(`${API_URL}/shopping-lists/${id}/${itemId}`, {
-        method: "DELETE",
-      });
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
   const updateShoppingList = async (list: ShoppingListItem[]): Promise<void> => {
     try {
       const newShoppingList = {
@@ -96,15 +58,12 @@ const ShoppingListPage: FC = () => {
   };
 
   return (
-    shoppingList.items.length > 0 && (
+    shoppingList.id.length > 0 && (
       <SortableList
         itemList={shoppingList.items}
         title={shoppingList.title}
         isDesktop={isDesktop}
         shoppingListId={shoppingList.id}
-        createShoppingListItem={createShoppingListItem}
-        deleteShoppingListItem={deleteShoppingListItem}
-        updateShoppingListItem={updateShoppingListItem}
         updateShoppingList={updateShoppingList}
       />
     )
