@@ -16,14 +16,7 @@
 }
 
 .taskList {
-  // background-color: #f6e2dd;
-  // transition: background-color 0.3s ease;
-
   &__isDesktop {
     padding: 8px;
-  }
-
-  &__isDraggingOver {
-    // background-color: darken($color: #f6e2dd, $amount: 2);
   }
 }

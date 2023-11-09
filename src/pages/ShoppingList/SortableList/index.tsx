@@ -1,8 +1,9 @@
-import { type FC, useState, useRef, useEffect } from "react";
+import { type FC, useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { DragDropContext, type DropResult } from "react-beautiful-dnd";
 import { v4 } from "uuid";
+import { debounce, isNil } from "lodash";
 
-import type { ShoppingListItem, Column as ColumnType } from "@/shared/types";
+import type { ShoppingListItem, Column as ColumnType, SelectionType } from "@/shared/types";
 
 import Column from "./Column";
 
@@ -12,7 +13,9 @@ interface Props {
   shoppingListId: string;
   isDesktop: boolean;
   createShoppingListItem: (item: ShoppingListItem) => Promise<void>;
+  updateShoppingListItem: (item: ShoppingListItem) => Promise<void>;
   deleteShoppingListItem: (itemId: string) => Promise<void>;
+  updateShoppingList: (list: ShoppingListItem[]) => Promise<void>;
 }
 
 const SortableList: FC<Props> = (props) => {
@@ -20,11 +23,16 @@ const SortableList: FC<Props> = (props) => {
   const prevShoppingListItemsRef = useRef<ShoppingListItem[]>([]);
   const lastItemRef = useRef<HTMLDivElement>(null);
   const isFirstRender = useRef(true);
+  const activeEditableDivRef = useRef<HTMLDivElement | null>(null);
+  const savedSelectionRef = useRef<SelectionType>(null);
 
-  const column: ColumnType = {
-    id: props.shoppingListId,
-    title: props.title,
-  };
+  const column: ColumnType = useMemo(
+    () => ({
+      id: props.shoppingListId,
+      title: props.title,
+    }),
+    [props.shoppingListId, props.title]
+  );
 
   useEffect(() => {
     const hasNewShoppingItemAdded = isFirstRender.current
@@ -45,11 +53,26 @@ const SortableList: FC<Props> = (props) => {
     }
 
     prevShoppingListItemsRef.current = shoppingListItems;
+
+    if (savedSelectionRef.current !== null) {
+      restoreSelection(savedSelectionRef.current);
+    }
   }, [shoppingListItems]);
 
   useEffect(() => {
     isFirstRender.current = false;
   }, []);
+
+  const debouncedListUpdate = useCallback(
+    debounce(
+      (list) => {
+        void props.updateShoppingList(list);
+      },
+      1000,
+      { leading: true, maxWait: 3500, trailing: true }
+    ),
+    []
+  );
 
   const handleDragEnd = (result: DropResult): void => {
     const { destination, source, draggableId } = result;
@@ -75,22 +98,85 @@ const SortableList: FC<Props> = (props) => {
   const handleItemRemove = (itemId: string): void => {
     const updatedShoppingListItems = shoppingListItems.filter(({ id }) => id !== itemId);
 
-    void props.deleteShoppingListItem(itemId);
     setShoppingListItems(updatedShoppingListItems);
+    debouncedListUpdate(updatedShoppingListItems);
   };
 
-  const handleNewItemInput = (e: React.ChangeEvent<HTMLDivElement>): void => {
+  const saveSelection = (): SelectionType => {
+    const selection = window.getSelection();
+    console.log(selection);
+
+    if (!isNil(selection) && !isNil(activeEditableDivRef.current)) {
+      const range = selection.getRangeAt(0);
+      const preSelectionRange = range.cloneRange();
+
+      preSelectionRange.selectNodeContents(activeEditableDivRef.current);
+      preSelectionRange.setEnd(range.startContainer, range.startOffset);
+
+      const start = preSelectionRange.toString().length;
+
+      return { start, end: start + range.toString().length };
+    }
+    return null;
+  };
+
+  const restoreSelection = (savedSelection: { start: number; end: number }): void => {
+    if (!isNil(activeEditableDivRef.current) && (Number(activeEditableDivRef.current.childNodes.length)) > 0) {
+      const { start } = savedSelection;
+      const charIndex = 0;
+      const range = document.createRange();
+      range.setStart(activeEditableDivRef.current.childNodes[charIndex], start);
+      range.collapse(true);
+
+      const selection = window.getSelection();
+
+      if (!isNil(selection)) {
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    }
+  };
+
+  const handleItemBlur = (event: React.ChangeEvent<HTMLDivElement>): void => {
+    activeEditableDivRef.current = null;
+    savedSelectionRef.current = null;
+  };
+
+  const handleItemInput = (event: React.ChangeEvent<HTMLDivElement>, itemId: string): void => {
+    const target = event.target as HTMLDivElement;
+    activeEditableDivRef.current = target;
+
+    const item = shoppingListItems.find((item) => item.id === itemId) as ShoppingListItem;
+    const updatedItem = { ...item, text: event.target?.textContent ?? "" };
+
+    const updatedShoppingListItems = shoppingListItems.map((item) =>
+      item.id === itemId ? updatedItem : item
+    );
+
+    if (document.activeElement === target) {
+      const savedSelection: SelectionType = saveSelection();
+
+      savedSelectionRef.current = savedSelection;
+    }
+
+    setShoppingListItems(updatedShoppingListItems);
+    debouncedListUpdate(updatedShoppingListItems);
+  };
+
+  const handleNewItemInput = (event: React.ChangeEvent<HTMLDivElement>): void => {
+    const maxOrder = Math.max(...shoppingListItems.map(({ order }) => order));
     const newItem = {
-      listId: props.shoppingListId,
       checked: false,
-      text: e.currentTarget.textContent ?? "",
+      text: event.currentTarget.textContent ?? "",
       id: v4(),
+      order: maxOrder + 1,
     };
     const updatedShoppingListItems = [...shoppingListItems, newItem];
 
-    e.currentTarget.textContent = "";
-    void props.createShoppingListItem(newItem);
+    event.currentTarget.textContent = "";
+
     setShoppingListItems(updatedShoppingListItems);
+    debouncedListUpdate(updatedShoppingListItems);
   };
 
   return (
@@ -100,8 +186,10 @@ const SortableList: FC<Props> = (props) => {
         column={column}
         itemList={shoppingListItems}
         isDesktop={props.isDesktop}
+        handleItemInput={handleItemInput}
         handleItemRemove={handleItemRemove}
         handleNewItemInput={handleNewItemInput}
+        handleItemBlur={handleItemBlur}
         lastItemRef={lastItemRef}
       />
     </DragDropContext>

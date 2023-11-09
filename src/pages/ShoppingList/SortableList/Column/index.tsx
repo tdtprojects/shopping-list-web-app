@@ -13,7 +13,9 @@ interface Props {
   lastItemRef: Ref<HTMLDivElement>;
   column: ColumnType;
   handleItemRemove: (itemId: string) => void;
+  handleItemInput: (e: React.ChangeEvent<HTMLDivElement>, itemId: string) => void;
   handleNewItemInput: (e: React.ChangeEvent<HTMLDivElement>) => void;
+  handleItemBlur: (e: React.ChangeEvent<HTMLDivElement>) => void;
 }
 
 const Column: FC<Props> = (props) => {
@@ -36,7 +38,9 @@ const Column: FC<Props> = (props) => {
               <ItemList
                 itemList={props.itemList}
                 isDesktop={props.isDesktop}
+                handleItemInput={props.handleItemInput}
                 handleItemRemove={props.handleItemRemove}
+                handleItemBlur={props.handleItemBlur}
                 lastItemRef={props.lastItemRef}
               />
               {provided.placeholder}

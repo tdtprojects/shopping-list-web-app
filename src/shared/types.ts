@@ -1,7 +1,7 @@
 export interface ShoppingListItem {
   id: string;
   text: string;
-  listId: string;
+  order: number;
   checked: boolean;
 }
 
@@ -15,3 +15,5 @@ export interface Column {
   id: string;
   title: string;
 }
+
+export type SelectionType = { start: number; end: number } | null;

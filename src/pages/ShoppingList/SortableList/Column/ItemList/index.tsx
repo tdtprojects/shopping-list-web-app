@@ -7,6 +7,8 @@ interface Props {
   itemList: ShoppingListItem[];
   isDesktop: boolean;
   lastItemRef: Ref<HTMLDivElement>;
+  handleItemInput: (e: React.ChangeEvent<HTMLDivElement>, itemId: string) => void;
+  handleItemBlur: (e: React.ChangeEvent<HTMLDivElement>) => void;
   handleItemRemove: (itemId: string) => void;
 }
 
@@ -17,7 +19,9 @@ const ItemList: FC<Props> = (props: Props) => {
       item={item}
       index={index}
       isDesktop={props.isDesktop}
+      handleItemInput={props.handleItemInput}
       handleItemRemove={props.handleItemRemove}
+      handleItemBlur={props.handleItemBlur}
       isLast={index === props.itemList.length - 1}
       lastItemRef={props.lastItemRef}
     />

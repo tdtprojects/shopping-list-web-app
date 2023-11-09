@@ -13,6 +13,8 @@ interface Props {
   isDesktop: boolean;
   isLast: boolean;
   lastItemRef: Ref<HTMLDivElement>;
+  handleItemInput: (e: React.ChangeEvent<HTMLDivElement>, itemId: string) => void;
+  handleItemBlur: (e: React.ChangeEvent<HTMLDivElement>) => void;
   handleItemRemove: (itemId: string) => void;
 }
 
@@ -20,6 +22,14 @@ const Item: FC<Props> = (props) => {
   const handleRemove = useCallback(() => {
     props.handleItemRemove(props.item.id);
   }, [props.handleItemRemove, props.item.id]);
+
+  const handleInput = useCallback(
+    (event: React.ChangeEvent<HTMLDivElement>) => {
+      props.handleItemInput(event, props.item.id);
+    },
+    [props.handleItemInput, props.item.id]
+  );
+
   const dragIconWrapperClassList = classNames(styles.dragIconWrapper, {
     [styles.dragIconWrapper__isDesktop]: props.isDesktop,
   });
@@ -57,6 +67,8 @@ const Item: FC<Props> = (props) => {
               aria-multiline="true"
               spellCheck="false"
               suppressContentEditableWarning={true}
+              onInput={handleInput}
+              onBlur={props.handleItemBlur}
               ref={props.isLast ? props.lastItemRef : null}
             >
               {props.item.text}
