@@ -1,0 +1,51 @@
+.root {
+  background-color: #f6e2dd;
+  position: relative;
+
+  &__isDragging {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+  }
+}
+
+.dragIconWrapper {
+  position: absolute;
+  left: 0;
+  cursor: grab;
+  color: rgb(85, 85, 85);
+  z-index: 100;
+
+  svg {
+    margin-top: 5px;
+  }
+}
+
+.content {
+  min-height: 29px;
+  padding: 5px 45px 5px 60px;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5rem;
+  text-align: start;
+  outline: none;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+
+
+  &:focus {
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  }
+}
+
+.closeIconWrapper {
+  position: absolute;
+  right: 5px;
+  top: 8px;
+  line-height: 0;
+  color: rgb(85, 85, 85);
+  cursor: pointer;
+
+  svg {
+    font-size: 20px;
+  }
+}

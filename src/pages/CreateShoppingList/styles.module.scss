@@ -1,0 +1,18 @@
+.root {
+  margin-top: 4rem;
+
+  button {
+    display: block;
+    margin: 20px auto;
+  }
+
+  & > div {
+    width: 80%;
+  }
+
+  &__isDesktop {
+    & > div {
+      width: 300px;
+    }
+  }
+}
