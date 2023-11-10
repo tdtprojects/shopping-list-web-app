@@ -17,7 +17,9 @@ const HomePage: FC = () => {
   useEffect(() => {
     const fetchShoppingLists = async (): Promise<void> => {
       try {
-        const response = await fetch(`${API_URL}/shopping-lists`);
+        const response = await fetch(`${API_URL}/shopping-lists`, {
+          credentials: "include",
+        });
         const result = await response.json();
 
         setShoppingLists(result);

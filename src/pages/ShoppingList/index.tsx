@@ -22,7 +22,9 @@ const ShoppingListPage: FC = () => {
 
   const fetchShoppingList = async (): Promise<void> => {
     try {
-      const response = await fetch(`${API_URL}/shopping-lists/${id}`);
+      const response = await fetch(`${API_URL}/shopping-lists/${id}`, {
+        credentials: "include",
+      });
 
       if (response.ok) {
         const result = await response.json();
