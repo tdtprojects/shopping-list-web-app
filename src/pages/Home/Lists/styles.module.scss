@@ -1,0 +1,52 @@
+.list {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  list-style: none;
+}
+
+.item {
+  border: 1px solid grey;
+  border-radius: 8px;
+  margin: 0 5px 10px;
+  position: relative;
+}
+
+.title {
+  font-size: 1.2rem;
+  margin-top: 50px;
+  font-weight: 400;
+}
+
+.itemTitle {
+  padding: 2px;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.75rem;
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.iconWrapper {
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0;
+  color: grey;
+}
+
+.closeIcon {
+  position: relative;
+  top: -7px;
+  right: -6px;
+
+  &:hover {
+    color: red;
+    color: darken(#fff, 15%);
+  }
+}
