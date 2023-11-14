@@ -9,10 +9,15 @@
 
 .dragIconWrapper {
   position: absolute;
-  left: 0;
+  left: -6px;
+  width: 36px;
   cursor: grab;
   color: rgb(85, 85, 85);
   z-index: 100;
+
+  &__isDesktop {
+    left: 0;
+  }
 
   svg {
     margin-top: 5px;
@@ -21,7 +26,7 @@
 
 .content {
   min-height: 29px;
-  padding: 5px 45px 5px 60px;
+  padding: 5px 45px 5px 65px;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5rem;
@@ -30,6 +35,10 @@
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
 
+  &__isChecked {
+    text-decoration: line-through;
+    color: rgb(85, 85, 85);
+  }
 
   &:focus {
     border-top: 1px solid rgba(0, 0, 0, 0.15);
