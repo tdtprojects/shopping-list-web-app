@@ -1,7 +1,7 @@
 .checkbox_wrapper {
   position: absolute;
   top: 3.5px;
-  left: 24px;
+  left: 30px;
 }
 .checkbox_wrapper * {
   box-sizing: border-box;
@@ -16,12 +16,6 @@
   transition: all 0.2s ease;
   display: inline-block;
 }
-.checkbox_wrapper .cbx:not(:last-child) {
-  // margin-right: 6px;
-}
-// .checkbox_wrapper .cbx:hover {
-//   background: rgba(0, 119, 255, 0.06);
-// }
 .checkbox_wrapper .cbx span {
   float: left;
   vertical-align: middle;
@@ -64,7 +58,6 @@
   visibility: hidden;
 }
 .checkbox_wrapper .inp_cbx:checked + .cbx span:first-child {
-  // background: rgb(85, 85, 85);
   background: transparent;
   border-color: rgb(85, 85, 85);
   animation: wave-4 0.4s ease;
@@ -79,12 +72,6 @@
   pointer-events: none;
   user-select: none;
 }
-// @media screen and (max-width: 640px) {
-//   .checkbox_wrapper .cbx {
-//     width: 100%;
-//     display: inline-block;
-//   }
-// }
 @-moz-keyframes wave-4 {
   50% {
     transform: scale(0.9);

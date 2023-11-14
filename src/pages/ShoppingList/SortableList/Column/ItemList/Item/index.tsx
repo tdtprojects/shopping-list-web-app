@@ -36,6 +36,7 @@ const Item: FC<Props> = (props) => {
   });
   const contentClassList = classNames(styles.content, {
     [styles.content__isDesktop]: props.isDesktop,
+    [styles.content__isChecked]: props.item.checked,
   });
 
   return (
