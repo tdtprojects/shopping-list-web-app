@@ -93,6 +93,10 @@ const SortableList: FC<Props> = (props) => {
       });
     }
 
+    if ("vibrate" in navigator) {
+      navigator.vibrate(100);
+    }
+
     setShoppingListItems(updatedShoppingListItems);
     debouncedListUpdate(updatedShoppingListItems);
   };
