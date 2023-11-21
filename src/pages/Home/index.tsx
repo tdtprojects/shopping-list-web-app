@@ -15,7 +15,7 @@ const HomePage: FC = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
   const navigate = useNavigate();
-  const [shoppingLists, setShoppingLists] = useState<ShoppingList[]>([]);
+  const [shoppingLists, setShoppingLists] = useState<ShoppingList[]>();
 
   useEffect(() => {
     const fetchShoppingLists = async (): Promise<void> => {
@@ -32,7 +32,7 @@ const HomePage: FC = () => {
     };
 
     void fetchShoppingLists();
-  }, [API_URL]);
+  }, []);
 
   const handleUnpinShoppingList = async (listId: string): Promise<void> => {
     try {
@@ -42,7 +42,7 @@ const HomePage: FC = () => {
       });
 
       if (response.status === 204) {
-        const updatedShoppingLists = shoppingLists.filter((list) => list.id !== listId);
+        const updatedShoppingLists = shoppingLists?.filter((list) => list.id !== listId);
 
         setShoppingLists(updatedShoppingLists);
       }
@@ -62,7 +62,7 @@ const HomePage: FC = () => {
     [styles.buttonWrapper__isDesktop]: isDesktop,
   });
 
-  return (
+  return Array.isArray(shoppingLists) && (
     <>
       <h1 className={titleClassList}>
         Welcome to the Shopping List app! Create lists and share them with friends using the link
