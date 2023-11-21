@@ -49,11 +49,12 @@ const Item: FC<Props> = (props) => {
         const draggableProps = { ...provided.draggableProps };
 
         if (typeof transform === "string") {
+          // This need to disable axis X dragging
           // eslint-disable-next-line
           // @ts-ignore
           draggableProps.style = {
             ...draggableProps.style,
-            transform: transform.replace(/\([-+]*\d+px,\s/, "(0px, "),
+            transform: transform.replace(/\(-?\d*\.?\d+px,\s/, "(0px, "),
           };
         }
 
