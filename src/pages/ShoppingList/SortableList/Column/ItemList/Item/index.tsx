@@ -5,6 +5,7 @@ import classNames from "classnames";
 
 import Checkbox from "./Checkbox";
 import type { ShoppingListItem } from "@/shared/types";
+import { preventControlCommandEnterKeyDown } from "@/shared/utils";
 import styles from "./styles.module.scss";
 
 interface Props {
@@ -63,7 +64,11 @@ const Item: FC<Props> = (props) => {
             <span {...provided.dragHandleProps} className={dragIconWrapperClassList}>
               <DragIndicator />
             </span>
-            <Checkbox id={props.item.id} handleCheckboxChange={props.handleCheckboxChange} checked={props.item.checked} />
+            <Checkbox
+              id={props.item.id}
+              handleCheckboxChange={props.handleCheckboxChange}
+              checked={props.item.checked}
+            />
             <div
               className={contentClassList}
               contentEditable="true"
@@ -72,6 +77,8 @@ const Item: FC<Props> = (props) => {
               suppressContentEditableWarning={true}
               onInput={handleInput}
               onBlur={props.handleItemBlur}
+              // Temporary bug fix
+              onKeyDown={preventControlCommandEnterKeyDown}
               ref={props.isLast ? props.lastItemRef : null}
             >
               {props.item.text}

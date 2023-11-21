@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import AddIcon from "@mui/icons-material/Add";
 
+import { preventControlCommandEnterKeyDown } from "@/shared/utils";
 import styles from "./styles.module.scss";
 
 interface Props {
@@ -20,6 +21,8 @@ const NewItem: FC<Props> = (props) => {
         spellCheck="false"
         suppressContentEditableWarning={true}
         onInput={props.handleNewItemInput}
+        // Temporary bug fix
+        onKeyDown={preventControlCommandEnterKeyDown}
       ></div>
       <span className={styles.placeholder}>List item</span>
     </div>
