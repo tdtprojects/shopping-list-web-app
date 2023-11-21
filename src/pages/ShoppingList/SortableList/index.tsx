@@ -71,6 +71,12 @@ const SortableList: FC<Props> = (props) => {
     []
   );
 
+  const handleDragUpdate = (): void => {
+    if ("vibrate" in navigator) {
+      navigator.vibrate(100);
+    }
+  };
+
   const handleDragEnd = (result: DropResult): void => {
     const { destination, source, draggableId } = result;
 
@@ -91,10 +97,6 @@ const SortableList: FC<Props> = (props) => {
       updatedShoppingListItems.forEach((item, index) => {
         item.order = index + 1;
       });
-    }
-
-    if ("vibrate" in navigator) {
-      navigator.vibrate(100);
     }
 
     setShoppingListItems(updatedShoppingListItems);
@@ -210,7 +212,7 @@ const SortableList: FC<Props> = (props) => {
   };
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
+    <DragDropContext onDragEnd={handleDragEnd} onDragUpdate={handleDragUpdate}>
       <Column
         key={column.id}
         column={column}
