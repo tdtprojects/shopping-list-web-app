@@ -60,7 +60,7 @@ const SortableList: FC<Props> = (props) => {
     isFirstRender.current = false;
   }, []);
 
-  const debouncedListUpdate = useCallback(
+  const updateShoppingList = useCallback(
     debounce(
       (list) => {
         void props.updateShoppingList(list);
@@ -100,7 +100,7 @@ const SortableList: FC<Props> = (props) => {
     }
 
     setShoppingListItems(updatedShoppingListItems);
-    debouncedListUpdate(updatedShoppingListItems);
+    updateShoppingList(updatedShoppingListItems);
   };
 
   const handleItemRemove = (itemId: string): void => {
@@ -116,7 +116,7 @@ const SortableList: FC<Props> = (props) => {
     }, []);
 
     setShoppingListItems(updatedShoppingListItems);
-    debouncedListUpdate(updatedShoppingListItems);
+    updateShoppingList(updatedShoppingListItems);
   };
 
   const saveSelection = (): SelectionType => {
@@ -175,7 +175,7 @@ const SortableList: FC<Props> = (props) => {
     }
 
     setShoppingListItems(updatedShoppingListItems);
-    debouncedListUpdate(updatedShoppingListItems);
+    updateShoppingList(updatedShoppingListItems);
   };
 
   const handleCheckboxChange = (itemId: string, value: boolean): void => {
@@ -184,7 +184,7 @@ const SortableList: FC<Props> = (props) => {
     );
 
     setShoppingListItems(updatedShoppingListItems);
-    debouncedListUpdate(updatedShoppingListItems);
+    updateShoppingList(updatedShoppingListItems);
   };
 
   const handleNewItemInput = (event: React.ChangeEvent<HTMLDivElement>): void => {
@@ -201,7 +201,7 @@ const SortableList: FC<Props> = (props) => {
     event.currentTarget.textContent = "";
 
     setShoppingListItems(updatedShoppingListItems);
-    debouncedListUpdate(updatedShoppingListItems);
+    updateShoppingList(updatedShoppingListItems);
   };
 
   return (

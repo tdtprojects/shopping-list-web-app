@@ -24,28 +24,30 @@ const Lists: FC<Props> = (props) => {
   );
 
   return (
-    <>
-      <h2 className={styles.title}>Previous Lists</h2>
-      <ul className={styles.list}>
-        {props.shoppingLists.map((shoppingList) => (
-          <li key={shoppingList.id} className={styles.item}>
-            <Link to={`/shopping-list/${shoppingList.id}`} className={styles.link}>
-              <Button
-                variant="contained"
-                size="small"
-                startIcon={<ListIcon />}
-                endIcon={
-                  <CloseIcon className={styles.closeIcon} onClick={getCloseIconClickHandler(shoppingList.id)} />
-                }>
-                <h3 className={styles.itemTitle}>{shoppingList.title}</h3>
-              </Button>
-              {/* <span className={styles.iconWrapper}><ListIcon /></span> */}
-              {/* <h3 className={styles.itemTitle}>{shoppingList.title}</h3> */}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </>
+    props.shoppingLists.length > 0 && (
+      <>
+        <h2 className={styles.title}>Previous Lists</h2>
+        <ul className={styles.list}>
+          {props.shoppingLists.map((shoppingList) => (
+            <li key={shoppingList.id} className={styles.item}>
+              <Link to={`/shopping-list/${shoppingList.id}`} className={styles.link}>
+                <Button
+                  variant="contained"
+                  size="small"
+                  startIcon={<ListIcon />}
+                  endIcon={
+                    <CloseIcon className={styles.closeIcon} onClick={getCloseIconClickHandler(shoppingList.id)} />
+                  }>
+                  <h3 className={styles.itemTitle}>{shoppingList.title}</h3>
+                </Button>
+                {/* <span className={styles.iconWrapper}><ListIcon /></span> */}
+                {/* <h3 className={styles.itemTitle}>{shoppingList.title}</h3> */}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </>
+    )
   );
 };
 
