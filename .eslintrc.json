@@ -9,19 +9,25 @@
     "sourceType": "module"
   },
   "plugins": ["react"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "ignorePatterns": ["vite.config.ts"],
   "rules": {
     "@typescript-eslint/semi": ["error", "always"],
     "@typescript-eslint/quotes": ["error", "double"],
     "@typescript-eslint/comma-dangle": ["error", "only-multiline"],
-    "@typescript-eslint/member-delimiter-style": ["error",
+    "@typescript-eslint/member-delimiter-style": [
+      "error",
       {
         "multiline": {
-          "delimiter": "semi", // 'none' or 'semi' or 'comma'
+          "delimiter": "semi",
           "requireLast": true
         },
         "singleline": {
-          "delimiter": "semi", // 'semi' or 'comma'
+          "delimiter": "semi",
           "requireLast": false
         }
       }

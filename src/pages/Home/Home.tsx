@@ -58,6 +58,7 @@ const HomePage: FC = () => {
   const titleClassList = classNames(styles.title, {
     [styles.title__isDesktop]: isDesktop,
   });
+
   const buttonWrapperClassList = classNames(styles.buttonWrapper, {
     [styles.buttonWrapper__isDesktop]: isDesktop,
   });
