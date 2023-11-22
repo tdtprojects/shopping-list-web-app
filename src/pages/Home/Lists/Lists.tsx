@@ -40,8 +40,6 @@ const Lists: FC<Props> = (props) => {
                   }>
                   <h3 className={styles.itemTitle}>{shoppingList.title}</h3>
                 </Button>
-                {/* <span className={styles.iconWrapper}><ListIcon /></span> */}
-                {/* <h3 className={styles.itemTitle}>{shoppingList.title}</h3> */}
               </Link>
             </li>
           ))}
