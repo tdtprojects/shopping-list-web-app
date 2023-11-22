@@ -79,8 +79,7 @@ const Item: FC<Props> = (props) => {
               onBlur={props.handleItemBlur}
               // Temporary bug fix
               onKeyDown={preventControlCommandEnterKeyDown}
-              ref={props.isLast ? props.lastItemRef : null}
-            >
+              ref={props.isLast ? props.lastItemRef : null}>
               {props.item.text}
             </div>
             <span className={styles.closeIconWrapper}>

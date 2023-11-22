@@ -62,18 +62,20 @@ const HomePage: FC = () => {
     [styles.buttonWrapper__isDesktop]: isDesktop,
   });
 
-  return Array.isArray(shoppingLists) && (
-    <>
-      <h1 className={titleClassList}>
-        Welcome to the Shopping List app! Create lists and share them with friends using the link
-      </h1>
-      <div className={buttonWrapperClassList}>
-        <Button variant="contained" onClick={handleButtonClick}>
-          Create a new shopping list
-        </Button>
-      </div>
-      <Lists shoppingLists={shoppingLists} handleUnpinShoppingList={handleUnpinShoppingList} />
-    </>
+  return (
+    Array.isArray(shoppingLists) && (
+      <>
+        <h1 className={titleClassList}>
+          Welcome to the Shopping List app! Create lists and share them with friends using the link
+        </h1>
+        <div className={buttonWrapperClassList}>
+          <Button variant="contained" onClick={handleButtonClick}>
+            Create a new shopping list
+          </Button>
+        </div>
+        <Lists shoppingLists={shoppingLists} handleUnpinShoppingList={handleUnpinShoppingList} />
+      </>
+    )
   );
 };
 

@@ -9,9 +9,12 @@ interface Props {
 }
 
 const Checkbox: FC<Props> = (props) => {
-  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    props.handleCheckboxChange(props.id, event.target.checked);
-  }, [props.id, props.handleCheckboxChange]);
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      props.handleCheckboxChange(props.id, event.target.checked);
+    },
+    [props.id, props.handleCheckboxChange]
+  );
 
   return (
     <div className={styles.checkbox_wrapper}>

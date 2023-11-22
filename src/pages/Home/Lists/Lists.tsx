@@ -35,12 +35,8 @@ const Lists: FC<Props> = (props) => {
                 size="small"
                 startIcon={<ListIcon />}
                 endIcon={
-                  <CloseIcon
-                    className={styles.closeIcon}
-                    onClick={getCloseIconClickHandler(shoppingList.id)}
-                  />
-                }
-              >
+                  <CloseIcon className={styles.closeIcon} onClick={getCloseIconClickHandler(shoppingList.id)} />
+                }>
                 <h3 className={styles.itemTitle}>{shoppingList.title}</h3>
               </Button>
               {/* <span className={styles.iconWrapper}><ListIcon /></span> */}

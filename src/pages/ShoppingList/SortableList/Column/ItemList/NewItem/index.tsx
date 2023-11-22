@@ -22,8 +22,7 @@ const NewItem: FC<Props> = (props) => {
         suppressContentEditableWarning={true}
         onInput={props.handleNewItemInput}
         // Temporary bug fix
-        onKeyDown={preventControlCommandEnterKeyDown}
-      ></div>
+        onKeyDown={preventControlCommandEnterKeyDown} />
       <span className={styles.placeholder}>List item</span>
     </div>
   );

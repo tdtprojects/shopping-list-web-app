@@ -105,17 +105,15 @@ const SortableList: FC<Props> = (props) => {
 
   const handleItemRemove = (itemId: string): void => {
     let order: number = 0;
-    const updatedShoppingListItems = shoppingListItems.reduce(
-      (result: ShoppingListItem[], currentItem) => {
-        if (currentItem.id !== itemId) {
-          order += 1;
-          return [...result, { ...currentItem, order }];
-        } else {
-          return result;
-        }
-      },
-      []
-    );
+    const updatedShoppingListItems = shoppingListItems.reduce((result: ShoppingListItem[], currentItem) => {
+      if (currentItem.id !== itemId) {
+        order += 1;
+
+        return [...result, { ...currentItem, order }];
+      } else {
+        return result;
+      }
+    }, []);
 
     setShoppingListItems(updatedShoppingListItems);
     debouncedListUpdate(updatedShoppingListItems);
@@ -139,13 +137,11 @@ const SortableList: FC<Props> = (props) => {
   };
 
   const restoreSelection = (savedSelection: { start: number; end: number }): void => {
-    if (
-      !isNil(activeEditableDivRef.current) &&
-      Number(activeEditableDivRef.current.childNodes.length) > 0
-    ) {
+    if (!isNil(activeEditableDivRef.current) && Number(activeEditableDivRef.current.childNodes.length) > 0) {
       const { start } = savedSelection;
       const charIndex = 0;
       const range = document.createRange();
+
       range.setStart(activeEditableDivRef.current.childNodes[charIndex], start);
       range.collapse(true);
 
@@ -165,14 +161,12 @@ const SortableList: FC<Props> = (props) => {
 
   const handleItemInput = (event: React.ChangeEvent<HTMLDivElement>, itemId: string): void => {
     const target = event.target as HTMLDivElement;
+
     activeEditableDivRef.current = target;
 
     const item = shoppingListItems.find((item) => item.id === itemId) as ShoppingListItem;
     const updatedItem = { ...item, text: event.target?.textContent ?? "" };
-
-    const updatedShoppingListItems = shoppingListItems.map((item) =>
-      item.id === itemId ? updatedItem : item
-    );
+    const updatedShoppingListItems = shoppingListItems.map((item) => (item.id === itemId ? updatedItem : item));
 
     if (document.activeElement === target) {
       const savedSelection: SelectionType = saveSelection();
@@ -194,8 +188,7 @@ const SortableList: FC<Props> = (props) => {
   };
 
   const handleNewItemInput = (event: React.ChangeEvent<HTMLDivElement>): void => {
-    const maxOrder =
-      shoppingListItems.length > 0 ? Math.max(...shoppingListItems.map(({ order }) => order)) : 0;
+    const maxOrder = shoppingListItems.length > 0 ? Math.max(...shoppingListItems.map(({ order }) => order)) : 0;
 
     const newItem = {
       checked: false,
