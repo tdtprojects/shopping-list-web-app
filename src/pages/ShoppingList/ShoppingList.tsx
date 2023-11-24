@@ -40,19 +40,28 @@ const ShoppingListPage: FC = () => {
     void fetchShoppingList();
   }, [id]);
 
-  const updateShoppingList = async (list: ShoppingListItem[]): Promise<void> => {
+  const updateShoppingListItems = async (items: ShoppingListItem[]): Promise<void> => {
     try {
-      const newShoppingList = {
-        title: shoppingList.title,
-        items: list,
-      };
-
       await fetch(`${API_URL}/shopping-lists/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newShoppingList),
+        body: JSON.stringify({ items }),
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const updateShoppingListTitle = async (title: string): Promise<void> => {
+    try {
+      await fetch(`${API_URL}/shopping-lists/${id}/title`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title }),
       });
     } catch (error) {
       console.error("Error:", error);
@@ -66,7 +75,8 @@ const ShoppingListPage: FC = () => {
         title={shoppingList.title}
         isDesktop={isDesktop}
         shoppingListId={shoppingList.id}
-        updateShoppingList={updateShoppingList}
+        updateShoppingListItems={updateShoppingListItems}
+        updateShoppingListTitle={updateShoppingListTitle}
       />
     )
   );

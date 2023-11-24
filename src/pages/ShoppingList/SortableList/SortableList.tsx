@@ -12,7 +12,8 @@ interface Props {
   title: string;
   shoppingListId: string;
   isDesktop: boolean;
-  updateShoppingList: (list: ShoppingListItem[]) => Promise<void>;
+  updateShoppingListItems: (items: ShoppingListItem[]) => Promise<void>;
+  updateShoppingListTitle: (title: string) => Promise<void>;
 }
 
 const SortableList: FC<Props> = (props) => {
@@ -62,8 +63,8 @@ const SortableList: FC<Props> = (props) => {
   }, []);
 
   const updateShoppingList = debounce(
-    (list) => {
-      void props.updateShoppingList(list);
+    (items) => {
+      void props.updateShoppingListItems(items);
     },
     1000,
     { leading: true, maxWait: 3500, trailing: true }
@@ -202,6 +203,12 @@ const SortableList: FC<Props> = (props) => {
     updateShoppingList(updatedShoppingListItems);
   };
 
+  const handleColumnTitleBlur = (event: React.FocusEvent<HTMLTextAreaElement>): void => {
+    const title = event.target.value;
+
+    void props.updateShoppingListTitle(title);
+  };
+
   return (
     <DragDropContext onDragEnd={handleDragEnd} onDragUpdate={handleDragUpdate}>
       <Column
@@ -214,6 +221,7 @@ const SortableList: FC<Props> = (props) => {
         handleNewItemInput={handleNewItemInput}
         handleItemBlur={handleItemBlur}
         handleCheckboxChange={handleCheckboxChange}
+        handleColumnTitleBlur={handleColumnTitleBlur}
         lastItemRef={lastItemRef}
       />
     </DragDropContext>

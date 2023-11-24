@@ -1,7 +1,8 @@
-import type { FC, Ref } from "react";
+import { type FC, type Ref } from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import TextField from "@mui/material/TextField";
 
 import NewItem from "./ItemList/NewItem";
 import StrictModeDroppable from "./StrictModeDroppable";
@@ -19,6 +20,7 @@ interface Props {
   handleNewItemInput: (e: React.ChangeEvent<HTMLDivElement>) => void;
   handleItemBlur: (e: React.ChangeEvent<HTMLDivElement>) => void;
   handleCheckboxChange: (itemId: string, value: boolean) => void;
+  handleColumnTitleBlur: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
 }
 
 const Column: FC<Props> = (props) => {
@@ -26,10 +28,10 @@ const Column: FC<Props> = (props) => {
     [styles.root__isDesktop]: props.isDesktop,
   });
   const homeLinkWrapperClassList = classNames(styles.homeLinkWrapper, {
-    [styles.homeLinkWrapper__isDesktop]: props.isDesktop
+    [styles.homeLinkWrapper__isDesktop]: props.isDesktop,
   });
   const homeLinkClassList = classNames(styles.homeLink, {
-    [styles.homeLink__isDesktop]: props.isDesktop
+    [styles.homeLink__isDesktop]: props.isDesktop,
   });
 
   return (
@@ -40,7 +42,14 @@ const Column: FC<Props> = (props) => {
           Lists
         </Link>
       </div>
-      <h3 className={styles.title}>{props.column.title}</h3>
+      <TextField
+        multiline
+        fullWidth
+        className={styles.title}
+        defaultValue={props.column.title}
+        onBlur={props.handleColumnTitleBlur}
+        placeholder="Title"
+      />
       <StrictModeDroppable droppableId={props.column.id}>
         {(provided, snapshot) => {
           const taskListClassList = classNames(styles.taskList, {
