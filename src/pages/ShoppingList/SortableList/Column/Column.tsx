@@ -1,8 +1,13 @@
-import { type FC, type Ref } from "react";
+import { type FC, type Ref, useState } from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
 import NewItem from "./ItemList/NewItem";
 import StrictModeDroppable from "./StrictModeDroppable";
@@ -21,9 +26,23 @@ interface Props {
   handleItemBlur: (e: React.ChangeEvent<HTMLDivElement>) => void;
   handleCheckboxChange: (itemId: string, value: boolean) => void;
   handleColumnTitleBlur: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
+  deleteShoppingList: (id: string) => Promise<void>;
 }
 
 const Column: FC<Props> = (props) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleMenuButtonClick = (event: React.MouseEvent<HTMLElement>): void => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = (): void => {
+    setAnchorEl(null);
+  };
+  const handleDeleteListClick = (): void => {
+    void props.deleteShoppingList(props.column.id);
+    handleMenuClose();
+  };
+
   const rootClassList = classNames(styles.root, {
     [styles.root__isDesktop]: props.isDesktop,
   });
@@ -33,6 +52,9 @@ const Column: FC<Props> = (props) => {
   const homeLinkClassList = classNames(styles.homeLink, {
     [styles.homeLink__isDesktop]: props.isDesktop,
   });
+  const menuButtonWrapperClassList = classNames(styles.menuButtonWrapper, {
+    [styles.menuButtonWrapper__isDesktop]: props.isDesktop,
+  });
 
   return (
     <div className={rootClassList}>
@@ -41,6 +63,17 @@ const Column: FC<Props> = (props) => {
           <NavigateBeforeIcon />
           Lists
         </Link>
+        <span className={menuButtonWrapperClassList}>
+          <IconButton onClick={handleMenuButtonClick}>
+            <MoreVertOutlinedIcon />
+          </IconButton>
+          <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
+            <MenuItem onClick={handleDeleteListClick}>
+              Delete list
+              <DeleteForeverOutlinedIcon className={styles.deleteListIcon} />
+            </MenuItem>
+          </Menu>
+        </span>
       </div>
       <TextField
         multiline
