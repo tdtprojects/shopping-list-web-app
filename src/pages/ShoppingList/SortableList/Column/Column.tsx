@@ -1,5 +1,7 @@
 import type { FC, Ref } from "react";
+import { Link } from "react-router-dom";
 import classNames from "classnames";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 
 import NewItem from "./ItemList/NewItem";
 import StrictModeDroppable from "./StrictModeDroppable";
@@ -23,9 +25,21 @@ const Column: FC<Props> = (props) => {
   const rootClassList = classNames(styles.root, {
     [styles.root__isDesktop]: props.isDesktop,
   });
+  const homeLinkWrapperClassList = classNames(styles.homeLinkWrapper, {
+    [styles.homeLinkWrapper__isDesktop]: props.isDesktop
+  });
+  const homeLinkClassList = classNames(styles.homeLink, {
+    [styles.homeLink__isDesktop]: props.isDesktop
+  });
 
   return (
     <div className={rootClassList}>
+      <div className={homeLinkWrapperClassList}>
+        <Link className={homeLinkClassList} to="/">
+          <NavigateBeforeIcon />
+          Lists
+        </Link>
+      </div>
       <h3 className={styles.title}>{props.column.title}</h3>
       <StrictModeDroppable droppableId={props.column.id}>
         {(provided, snapshot) => {
