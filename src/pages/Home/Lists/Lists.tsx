@@ -40,7 +40,7 @@ const Lists: FC<Props> = (props) => {
                   endIcon={
                     <CloseIcon className={styles.closeIcon} onClick={getCloseIconClickHandler(shoppingList.id)} />
                   }>
-                  <h3 className={styles.itemTitle}>{shoppingList.title}</h3>
+                  <h3 className={styles.itemTitle}>{shoppingList.title.length > 0 ? shoppingList.title : "Title"}</h3>
                 </Button>
               </Link>
             </li>
