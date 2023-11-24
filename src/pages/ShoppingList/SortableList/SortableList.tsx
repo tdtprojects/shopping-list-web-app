@@ -1,4 +1,4 @@
-import { type FC, useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { type FC, useState, useRef, useEffect, useMemo } from "react";
 import { DragDropContext, type DropResult } from "react-beautiful-dnd";
 import { v4 } from "uuid";
 import { debounce, isNil } from "lodash";
@@ -22,13 +22,14 @@ const SortableList: FC<Props> = (props) => {
   const isFirstRender = useRef(true);
   const activeEditableDivRef = useRef<HTMLDivElement | null>(null);
   const savedSelectionRef = useRef<SelectionType>(null);
+  const { shoppingListId, title } = props;
 
   const column: ColumnType = useMemo(
     () => ({
-      id: props.shoppingListId,
-      title: props.title,
+      id: shoppingListId,
+      title,
     }),
-    [props.shoppingListId, props.title]
+    [shoppingListId, title]
   );
 
   useEffect(() => {
@@ -60,15 +61,12 @@ const SortableList: FC<Props> = (props) => {
     isFirstRender.current = false;
   }, []);
 
-  const debouncedListUpdate = useCallback(
-    debounce(
-      (list) => {
-        void props.updateShoppingList(list);
-      },
-      1000,
-      { leading: true, maxWait: 3500, trailing: true }
-    ),
-    []
+  const updateShoppingList = debounce(
+    (list) => {
+      void props.updateShoppingList(list);
+    },
+    1000,
+    { leading: true, maxWait: 3500, trailing: true }
   );
 
   const handleDragUpdate = (): void => {
@@ -100,25 +98,23 @@ const SortableList: FC<Props> = (props) => {
     }
 
     setShoppingListItems(updatedShoppingListItems);
-    debouncedListUpdate(updatedShoppingListItems);
+    updateShoppingList(updatedShoppingListItems);
   };
 
   const handleItemRemove = (itemId: string): void => {
     let order: number = 0;
-    const updatedShoppingListItems = shoppingListItems.reduce(
-      (result: ShoppingListItem[], currentItem) => {
-        if (currentItem.id !== itemId) {
-          order += 1;
-          return [...result, { ...currentItem, order }];
-        } else {
-          return result;
-        }
-      },
-      []
-    );
+    const updatedShoppingListItems = shoppingListItems.reduce((result: ShoppingListItem[], currentItem) => {
+      if (currentItem.id !== itemId) {
+        order += 1;
+
+        return [...result, { ...currentItem, order }];
+      } else {
+        return result;
+      }
+    }, []);
 
     setShoppingListItems(updatedShoppingListItems);
-    debouncedListUpdate(updatedShoppingListItems);
+    updateShoppingList(updatedShoppingListItems);
   };
 
   const saveSelection = (): SelectionType => {
@@ -139,13 +135,11 @@ const SortableList: FC<Props> = (props) => {
   };
 
   const restoreSelection = (savedSelection: { start: number; end: number }): void => {
-    if (
-      !isNil(activeEditableDivRef.current) &&
-      Number(activeEditableDivRef.current.childNodes.length) > 0
-    ) {
+    if (!isNil(activeEditableDivRef.current) && activeEditableDivRef.current.childNodes.length > 0) {
       const { start } = savedSelection;
       const charIndex = 0;
       const range = document.createRange();
+
       range.setStart(activeEditableDivRef.current.childNodes[charIndex], start);
       range.collapse(true);
 
@@ -158,21 +152,19 @@ const SortableList: FC<Props> = (props) => {
     }
   };
 
-  const handleItemBlur = (event: React.ChangeEvent<HTMLDivElement>): void => {
+  const handleItemBlur = (): void => {
     activeEditableDivRef.current = null;
     savedSelectionRef.current = null;
   };
 
   const handleItemInput = (event: React.ChangeEvent<HTMLDivElement>, itemId: string): void => {
     const target = event.target as HTMLDivElement;
+
     activeEditableDivRef.current = target;
 
     const item = shoppingListItems.find((item) => item.id === itemId) as ShoppingListItem;
     const updatedItem = { ...item, text: event.target?.textContent ?? "" };
-
-    const updatedShoppingListItems = shoppingListItems.map((item) =>
-      item.id === itemId ? updatedItem : item
-    );
+    const updatedShoppingListItems = shoppingListItems.map((item) => (item.id === itemId ? updatedItem : item));
 
     if (document.activeElement === target) {
       const savedSelection: SelectionType = saveSelection();
@@ -181,7 +173,7 @@ const SortableList: FC<Props> = (props) => {
     }
 
     setShoppingListItems(updatedShoppingListItems);
-    debouncedListUpdate(updatedShoppingListItems);
+    updateShoppingList(updatedShoppingListItems);
   };
 
   const handleCheckboxChange = (itemId: string, value: boolean): void => {
@@ -190,12 +182,11 @@ const SortableList: FC<Props> = (props) => {
     );
 
     setShoppingListItems(updatedShoppingListItems);
-    debouncedListUpdate(updatedShoppingListItems);
+    updateShoppingList(updatedShoppingListItems);
   };
 
   const handleNewItemInput = (event: React.ChangeEvent<HTMLDivElement>): void => {
-    const maxOrder =
-      shoppingListItems.length > 0 ? Math.max(...shoppingListItems.map(({ order }) => order)) : 0;
+    const maxOrder = shoppingListItems.length > 0 ? Math.max(...shoppingListItems.map(({ order }) => order)) : 0;
 
     const newItem = {
       checked: false,
@@ -208,7 +199,7 @@ const SortableList: FC<Props> = (props) => {
     event.currentTarget.textContent = "";
 
     setShoppingListItems(updatedShoppingListItems);
-    debouncedListUpdate(updatedShoppingListItems);
+    updateShoppingList(updatedShoppingListItems);
   };
 
   return (

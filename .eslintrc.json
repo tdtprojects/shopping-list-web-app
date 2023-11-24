@@ -8,23 +8,34 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["react"],
+  "plugins": ["react", "react-hooks"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "ignorePatterns": ["vite.config.ts"],
   "rules": {
     "@typescript-eslint/semi": ["error", "always"],
     "@typescript-eslint/quotes": ["error", "double"],
     "@typescript-eslint/comma-dangle": ["error", "only-multiline"],
-    "@typescript-eslint/member-delimiter-style": ["error",
+    "@typescript-eslint/member-delimiter-style": [
+      "error",
       {
         "multiline": {
-          "delimiter": "semi", // 'none' or 'semi' or 'comma'
+          "delimiter": "semi",
           "requireLast": true
         },
         "singleline": {
-          "delimiter": "semi", // 'semi' or 'comma'
+          "delimiter": "semi",
           "requireLast": false
         }
       }
-    ]
+    ],
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off"
   }
 }

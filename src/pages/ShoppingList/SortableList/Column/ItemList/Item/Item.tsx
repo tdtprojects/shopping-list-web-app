@@ -5,6 +5,7 @@ import classNames from "classnames";
 
 import Checkbox from "./Checkbox";
 import type { ShoppingListItem } from "@/shared/types";
+import { preventControlCommandEnterKeyDown } from "@/shared/utils";
 import styles from "./styles.module.scss";
 
 interface Props {
@@ -20,15 +21,17 @@ interface Props {
 }
 
 const Item: FC<Props> = (props) => {
+  const { handleItemRemove, handleItemInput, item } = props;
+
   const handleRemove = useCallback(() => {
-    props.handleItemRemove(props.item.id);
-  }, [props.handleItemRemove, props.item.id]);
+    handleItemRemove(item.id);
+  }, [handleItemRemove, item.id]);
 
   const handleInput = useCallback(
     (event: React.ChangeEvent<HTMLDivElement>) => {
-      props.handleItemInput(event, props.item.id);
+      handleItemInput(event, item.id);
     },
-    [props.handleItemInput, props.item.id]
+    [handleItemInput, item.id]
   );
 
   const dragIconWrapperClassList = classNames(styles.dragIconWrapper, {
@@ -63,7 +66,11 @@ const Item: FC<Props> = (props) => {
             <span {...provided.dragHandleProps} className={dragIconWrapperClassList}>
               <DragIndicator />
             </span>
-            <Checkbox id={props.item.id} handleCheckboxChange={props.handleCheckboxChange} checked={props.item.checked} />
+            <Checkbox
+              id={props.item.id}
+              handleCheckboxChange={props.handleCheckboxChange}
+              checked={props.item.checked}
+            />
             <div
               className={contentClassList}
               contentEditable="true"
@@ -72,8 +79,9 @@ const Item: FC<Props> = (props) => {
               suppressContentEditableWarning={true}
               onInput={handleInput}
               onBlur={props.handleItemBlur}
-              ref={props.isLast ? props.lastItemRef : null}
-            >
+              // Temporary bug fix
+              onKeyDown={preventControlCommandEnterKeyDown}
+              ref={props.isLast ? props.lastItemRef : null}>
               {props.item.text}
             </div>
             <span className={styles.closeIconWrapper}>
