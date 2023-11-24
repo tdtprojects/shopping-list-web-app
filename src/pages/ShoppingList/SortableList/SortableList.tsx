@@ -22,13 +22,14 @@ const SortableList: FC<Props> = (props) => {
   const isFirstRender = useRef(true);
   const activeEditableDivRef = useRef<HTMLDivElement | null>(null);
   const savedSelectionRef = useRef<SelectionType>(null);
+  const { shoppingListId, title } = props;
 
   const column: ColumnType = useMemo(
     () => ({
-      id: props.shoppingListId,
-      title: props.title,
+      id: shoppingListId,
+      title,
     }),
-    [props.shoppingListId, props.title]
+    [shoppingListId, title]
   );
 
   useEffect(() => {
@@ -134,7 +135,7 @@ const SortableList: FC<Props> = (props) => {
   };
 
   const restoreSelection = (savedSelection: { start: number; end: number }): void => {
-    if (!isNil(activeEditableDivRef.current) && Number(activeEditableDivRef.current.childNodes.length) > 0) {
+    if (!isNil(activeEditableDivRef.current) && activeEditableDivRef.current.childNodes.length > 0) {
       const { start } = savedSelection;
       const charIndex = 0;
       const range = document.createRange();
@@ -151,7 +152,7 @@ const SortableList: FC<Props> = (props) => {
     }
   };
 
-  const handleItemBlur = (event: React.ChangeEvent<HTMLDivElement>): void => {
+  const handleItemBlur = (): void => {
     activeEditableDivRef.current = null;
     savedSelectionRef.current = null;
   };
