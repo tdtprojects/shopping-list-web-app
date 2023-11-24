@@ -9,11 +9,13 @@ interface Props {
 }
 
 const Checkbox: FC<Props> = (props) => {
+  const { id, handleCheckboxChange } = props;
+
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      props.handleCheckboxChange(props.id, event.target.checked);
+      handleCheckboxChange(id, event.target.checked);
     },
-    [props.id, props.handleCheckboxChange]
+    [id, handleCheckboxChange]
   );
 
   return (

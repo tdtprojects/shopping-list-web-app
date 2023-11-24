@@ -14,13 +14,15 @@ interface Props {
 }
 
 const Lists: FC<Props> = (props) => {
+  const { handleUnpinShoppingList } = props;
+
   const getCloseIconClickHandler = useCallback(
     (listId: string) => (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
       event.preventDefault();
 
-      void props.handleUnpinShoppingList(listId);
+      void handleUnpinShoppingList(listId);
     },
-    [props.handleUnpinShoppingList]
+    [handleUnpinShoppingList]
   );
 
   return (

@@ -1,4 +1,4 @@
-import { type FC, useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { type FC, useState, useRef, useEffect, useMemo } from "react";
 import { DragDropContext, type DropResult } from "react-beautiful-dnd";
 import { v4 } from "uuid";
 import { debounce, isNil } from "lodash";
@@ -60,15 +60,12 @@ const SortableList: FC<Props> = (props) => {
     isFirstRender.current = false;
   }, []);
 
-  const updateShoppingList = useCallback(
-    debounce(
-      (list) => {
-        void props.updateShoppingList(list);
-      },
-      1000,
-      { leading: true, maxWait: 3500, trailing: true }
-    ),
-    []
+  const updateShoppingList = debounce(
+    (list) => {
+      void props.updateShoppingList(list);
+    },
+    1000,
+    { leading: true, maxWait: 3500, trailing: true }
   );
 
   const handleDragUpdate = (): void => {

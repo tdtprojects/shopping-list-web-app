@@ -21,15 +21,17 @@ interface Props {
 }
 
 const Item: FC<Props> = (props) => {
+  const { handleItemRemove, handleItemInput, item } = props;
+
   const handleRemove = useCallback(() => {
-    props.handleItemRemove(props.item.id);
-  }, [props.handleItemRemove, props.item.id]);
+    handleItemRemove(item.id);
+  }, [handleItemRemove, item.id]);
 
   const handleInput = useCallback(
     (event: React.ChangeEvent<HTMLDivElement>) => {
-      props.handleItemInput(event, props.item.id);
+      handleItemInput(event, item.id);
     },
-    [props.handleItemInput, props.item.id]
+    [handleItemInput, item.id]
   );
 
   const dragIconWrapperClassList = classNames(styles.dragIconWrapper, {

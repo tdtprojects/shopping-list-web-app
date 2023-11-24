@@ -20,25 +20,25 @@ const ShoppingListPage: FC = () => {
   const { id } = useParams();
   const [shoppingList, setShoppingList] = useState<ShoppingList>(defaultState);
 
-  const fetchShoppingList = async (): Promise<void> => {
-    try {
-      const response = await fetch(`${API_URL}/shopping-lists/${id}`, {
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-
-        setShoppingList(result);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchShoppingList = async (): Promise<void> => {
+      try {
+        const response = await fetch(`${API_URL}/shopping-lists/${id}`, {
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+
+          setShoppingList(result);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
     void fetchShoppingList();
-  }, []);
+  }, [id]);
 
   const updateShoppingList = async (list: ShoppingListItem[]): Promise<void> => {
     try {
