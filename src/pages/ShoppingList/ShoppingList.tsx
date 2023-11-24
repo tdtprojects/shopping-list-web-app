@@ -1,5 +1,5 @@
 import { type FC, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
@@ -18,6 +18,7 @@ const ShoppingListPage: FC = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
   const { id } = useParams();
+  const navigate = useNavigate();
   const [shoppingList, setShoppingList] = useState<ShoppingList>(defaultState);
 
   useEffect(() => {
@@ -68,6 +69,23 @@ const ShoppingListPage: FC = () => {
     }
   };
 
+  const deleteShoppingList = async (id: string): Promise<void> => {
+    try {
+      const response = await fetch(`${API_URL}/shopping-lists/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 204) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     shoppingList.id.length > 0 && (
       <SortableList
@@ -77,6 +95,7 @@ const ShoppingListPage: FC = () => {
         shoppingListId={shoppingList.id}
         updateShoppingListItems={updateShoppingListItems}
         updateShoppingListTitle={updateShoppingListTitle}
+        deleteShoppingList={deleteShoppingList}
       />
     )
   );

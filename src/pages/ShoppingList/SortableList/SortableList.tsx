@@ -1,4 +1,4 @@
-import { type FC, useState, useRef, useEffect, useMemo } from "react";
+import { type FC, useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { DragDropContext, type DropResult } from "react-beautiful-dnd";
 import { v4 } from "uuid";
 import { debounce, isNil } from "lodash";
@@ -14,6 +14,7 @@ interface Props {
   isDesktop: boolean;
   updateShoppingListItems: (items: ShoppingListItem[]) => Promise<void>;
   updateShoppingListTitle: (title: string) => Promise<void>;
+  deleteShoppingList: (id: string) => Promise<void>;
 }
 
 const SortableList: FC<Props> = (props) => {
@@ -25,6 +26,7 @@ const SortableList: FC<Props> = (props) => {
   const savedSelectionRef = useRef<SelectionType>(null);
   const { shoppingListId, title } = props;
 
+  const { updateShoppingListItems } = props;
   const column: ColumnType = useMemo(
     () => ({
       id: shoppingListId,
@@ -62,12 +64,16 @@ const SortableList: FC<Props> = (props) => {
     isFirstRender.current = false;
   }, []);
 
-  const updateShoppingList = debounce(
-    (items) => {
-      void props.updateShoppingListItems(items);
-    },
-    1000,
-    { leading: true, maxWait: 3500, trailing: true }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const updateShoppingList = useCallback(
+    debounce(
+      (items) => {
+        void props.updateShoppingListItems(items);
+      },
+      1000,
+      { leading: true, maxWait: 3500, trailing: true }
+    ),
+    [debounce, updateShoppingListItems]
   );
 
   const handleDragUpdate = (): void => {
@@ -222,6 +228,7 @@ const SortableList: FC<Props> = (props) => {
         handleItemBlur={handleItemBlur}
         handleCheckboxChange={handleCheckboxChange}
         handleColumnTitleBlur={handleColumnTitleBlur}
+        deleteShoppingList={props.deleteShoppingList}
         lastItemRef={lastItemRef}
       />
     </DragDropContext>

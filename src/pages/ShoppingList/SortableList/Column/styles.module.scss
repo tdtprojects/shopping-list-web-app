@@ -64,3 +64,18 @@
     }
   }
 }
+
+.menuButtonWrapper {
+  position: absolute !important;
+  right: -10px;
+  top: -8px;
+
+  &__isDesktop {
+    top: 1px;
+    right: 1px;
+  }
+}
+
+.deleteListIcon {
+  margin-left: 20px;
+}
