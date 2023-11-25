@@ -9,6 +9,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
+import Dialog from "@/shared/components/Dialog";
+
 import NewItem from "./ItemList/NewItem";
 import StrictModeDroppable from "./StrictModeDroppable";
 import ItemList from "./ItemList";
@@ -30,17 +32,34 @@ interface Props {
 }
 
 const Column: FC<Props> = (props) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [anchorMenuElement, setAnchorMenuElement] = useState<null | HTMLElement>(null);
+  const isSettingsMenuOpen = Boolean(anchorMenuElement);
+
   const handleMenuButtonClick = (event: React.MouseEvent<HTMLElement>): void => {
-    setAnchorEl(event.currentTarget);
+    setAnchorMenuElement(event.currentTarget);
   };
+
   const handleMenuClose = (): void => {
-    setAnchorEl(null);
+    setAnchorMenuElement(null);
   };
+
   const handleDeleteListClick = (): void => {
-    void props.deleteShoppingList(props.column.id);
     handleMenuClose();
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = (): void => {
+    setIsDialogOpen(false);
+  };
+
+  const handleDialogAgree = (): void => {
+    void props.deleteShoppingList(props.column.id);
+    setIsDialogOpen(false);
+  };
+
+  const handleDialogDisagree = (): void => {
+    setIsDialogOpen(false);
   };
 
   const rootClassList = classNames(styles.root, {
@@ -67,12 +86,19 @@ const Column: FC<Props> = (props) => {
           <IconButton onClick={handleMenuButtonClick}>
             <MoreVertOutlinedIcon />
           </IconButton>
-          <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
+          <Menu anchorEl={anchorMenuElement} open={isSettingsMenuOpen} onClose={handleMenuClose}>
             <MenuItem onClick={handleDeleteListClick}>
               Delete list
               <DeleteForeverOutlinedIcon className={styles.deleteListIcon} />
             </MenuItem>
           </Menu>
+          <Dialog
+            isOpen={isDialogOpen}
+            title="Are you sure you want to delete this shopping list?"
+            handleClose={handleDialogClose}
+            handleAgree={handleDialogAgree}
+            handleDisagree={handleDialogDisagree}
+          />
         </span>
       </div>
       <TextField
