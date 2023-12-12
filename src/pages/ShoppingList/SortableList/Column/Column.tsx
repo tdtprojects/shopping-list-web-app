@@ -1,13 +1,16 @@
 import { type FC, type Ref, useState } from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
+import copy from "clipboard-copy";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Popover from "@mui/material/Popover";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 import Dialog from "@/shared/components/Dialog";
 
@@ -33,15 +36,21 @@ interface Props {
 
 const Column: FC<Props> = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [anchorMenuElement, setAnchorMenuElement] = useState<null | HTMLElement>(null);
-  const isSettingsMenuOpen = Boolean(anchorMenuElement);
+  const [menuAnchorElement, setMenuAnchorElement] = useState<HTMLElement | null>(null);
+  const [popoverAnchorElement, setPopoverAnchorElement] = useState<HTMLLIElement | null>(null);
+  const isSettingsMenuOpen = Boolean(menuAnchorElement);
+  const isPopoverOpen = Boolean(popoverAnchorElement);
 
   const handleMenuButtonClick = (event: React.MouseEvent<HTMLElement>): void => {
-    setAnchorMenuElement(event.currentTarget);
+    setMenuAnchorElement(event.currentTarget);
   };
 
   const handleMenuClose = (): void => {
-    setAnchorMenuElement(null);
+    setMenuAnchorElement(null);
+  };
+
+  const handlePopoverClose = (): void => {
+    setPopoverAnchorElement(null);
   };
 
   const handleDeleteListClick = (): void => {
@@ -60,6 +69,27 @@ const Column: FC<Props> = (props) => {
 
   const handleDialogDisagree = (): void => {
     setIsDialogOpen(false);
+  };
+
+  const handleCopyLinkClick = (event: React.MouseEvent<HTMLLIElement>): void => {
+    void copyLink(event);
+  };
+
+  const copyLink = async (event: React.MouseEvent<HTMLLIElement>): Promise<void> => {
+    try {
+      const currentUrl = window.location.href;
+
+      await copy(currentUrl);
+      setPopoverAnchorElement(event.target as HTMLLIElement);
+
+      setTimeout(() => {
+        handlePopoverClose();
+      }, 1000);
+
+      handleMenuClose();
+    } catch (error) {
+      console.error("Copy link error", error);
+    }
   };
 
   const rootClassList = classNames(styles.root, {
@@ -82,14 +112,22 @@ const Column: FC<Props> = (props) => {
           <NavigateBeforeIcon />
           Lists
         </Link>
-        <span className={menuButtonWrapperClassList}>
+        <div className={menuButtonWrapperClassList}>
           <IconButton onClick={handleMenuButtonClick}>
             <MoreVertOutlinedIcon />
           </IconButton>
-          <Menu anchorEl={anchorMenuElement} open={isSettingsMenuOpen} onClose={handleMenuClose}>
+          <Menu anchorEl={menuAnchorElement} open={isSettingsMenuOpen} onClose={handleMenuClose}>
+            <MenuItem onClick={handleCopyLinkClick}>
+              <div className={styles.menuItemWrapper}>
+                <span>Copy link</span>
+                <ContentCopyIcon />
+              </div>
+            </MenuItem>
             <MenuItem onClick={handleDeleteListClick}>
-              Delete list
-              <DeleteForeverOutlinedIcon className={styles.deleteListIcon} />
+              <div className={styles.menuItemWrapper}>
+                <span>Delete list</span>
+                <DeleteForeverOutlinedIcon />
+              </div>
             </MenuItem>
           </Menu>
           <Dialog
@@ -99,7 +137,14 @@ const Column: FC<Props> = (props) => {
             handleAgree={handleDialogAgree}
             handleDisagree={handleDialogDisagree}
           />
-        </span>
+          <Popover
+            open={isPopoverOpen}
+            anchorEl={popoverAnchorElement}
+            onClose={handlePopoverClose}
+            classes={{ paper: styles.popover }}>
+            Link copied
+          </Popover>
+        </div>
       </div>
       <TextField
         multiline
