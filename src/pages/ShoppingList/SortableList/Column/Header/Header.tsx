@@ -1,4 +1,4 @@
-import { type FC, useState } from "react";
+import { type FC, useState, memo } from "react";
 import { Link } from "react-router-dom";
 import copy from "clipboard-copy";
 import classNames from "classnames";
@@ -132,4 +132,4 @@ const Header: FC<Props> = (props) => {
   );
 };
 
-export default Header;
+export default memo(Header);
