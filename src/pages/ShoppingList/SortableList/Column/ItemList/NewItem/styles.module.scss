@@ -6,7 +6,7 @@
 .plusIconWrapper {
   position: absolute;
   left: 32px;
-  color: rgb(85, 85, 85);
+  color: rgba(85, 85, 85, 0.75);
   pointer-events: none;
 
   svg {
@@ -15,27 +15,30 @@
 }
 
 .content {
-  min-height: 29px;
-  padding: 5px 45px 5px 65px;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5rem;
-  text-align: start;
-  outline: none;
-  border-top: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-
-  &:focus {
-    border-top: 1px solid rgba(0, 0, 0, 0.15);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  fieldset {
+    border: none;
   }
-}
 
-.placeholder {
-  position: absolute;
-  top: 6px;
-  left: 66px;
-  user-select: none;
-  pointer-events: none;
-  color: lighten($color: #202124, $amount: 10);
+  & > div {
+    height: 35px;
+    padding: 5px 45px 5px 65px;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    border-radius: 0;
+  }
+
+  &__isFocused {
+    & > div {
+      border-top: 1px solid rgba(0, 0, 0, 0.15);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  textarea::placeholder {
+    opacity: 1;
+    color: lighten($color: #202124, $amount:35);
+  }
 }

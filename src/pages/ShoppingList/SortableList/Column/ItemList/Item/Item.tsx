@@ -1,11 +1,12 @@
-import { type FC, type Ref, useCallback } from "react";
+import { type FC, type Ref, useState, useCallback } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { DragIndicator, Close } from "@mui/icons-material";
+import TextField from "@mui/material/TextField";
 import classNames from "classnames";
 
-import Checkbox from "./Checkbox";
 import type { ShoppingListItem } from "@/shared/types";
-import { preventControlCommandEnterKeyDown } from "@/shared/utils";
+
+import Checkbox from "./Checkbox";
 import styles from "./styles.module.scss";
 
 interface Props {
@@ -13,26 +14,35 @@ interface Props {
   index: number;
   isDesktop: boolean;
   isLast: boolean;
-  lastItemRef: Ref<HTMLDivElement>;
-  handleItemInput: (e: React.ChangeEvent<HTMLDivElement>, itemId: string) => void;
-  handleItemBlur: (e: React.ChangeEvent<HTMLDivElement>) => void;
+  lastItemRef: Ref<HTMLTextAreaElement>;
+  handleItemChange: (e: React.ChangeEvent<HTMLTextAreaElement>, itemId: string) => void;
   handleItemRemove: (itemId: string) => void;
   handleCheckboxChange: (itemId: string, value: boolean) => void;
 }
 
 const Item: FC<Props> = (props) => {
-  const { handleItemRemove, handleItemInput, item } = props;
+  const [isTextFieldFocused, setIsTextFieldFocused] = useState(false);
+
+  const { handleItemRemove, handleItemChange, item } = props;
 
   const handleRemove = useCallback(() => {
     handleItemRemove(item.id);
   }, [handleItemRemove, item.id]);
 
-  const handleInput = useCallback(
-    (event: React.ChangeEvent<HTMLDivElement>) => {
-      handleItemInput(event, item.id);
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      handleItemChange(event, item.id);
     },
-    [handleItemInput, item.id]
+    [handleItemChange, item.id]
   );
+
+  const handleBlur = (): void => {
+    setIsTextFieldFocused(false);
+  };
+
+  const handleFocus = (): void => {
+    setIsTextFieldFocused(true);
+  };
 
   const dragIconWrapperClassList = classNames(styles.dragIconWrapper, {
     [styles.dragIconWrapper__isDesktop]: props.isDesktop,
@@ -40,6 +50,7 @@ const Item: FC<Props> = (props) => {
   const contentClassList = classNames(styles.content, {
     [styles.content__isDesktop]: props.isDesktop,
     [styles.content__isChecked]: props.item.checked,
+    [styles.content__isFocused]: isTextFieldFocused,
   });
 
   return (
@@ -71,19 +82,16 @@ const Item: FC<Props> = (props) => {
               handleCheckboxChange={props.handleCheckboxChange}
               checked={props.item.checked}
             />
-            <div
+            <TextField
+              multiline
+              fullWidth
               className={contentClassList}
-              contentEditable="true"
-              aria-multiline="true"
-              spellCheck="false"
-              suppressContentEditableWarning={true}
-              onInput={handleInput}
-              onBlur={props.handleItemBlur}
-              // Temporary bug fix
-              onKeyDown={preventControlCommandEnterKeyDown}
-              ref={props.isLast ? props.lastItemRef : null}>
-              {props.item.text}
-            </div>
+              defaultValue={props.item.text}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
+              inputRef={props.isLast ? props.lastItemRef : null}
+            />
             <span className={styles.closeIconWrapper}>
               <Close onClick={handleRemove} />
             </span>

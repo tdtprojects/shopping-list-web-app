@@ -13,12 +13,11 @@ import styles from "./styles.module.scss";
 interface Props {
   itemList: ShoppingListItem[];
   isDesktop: boolean;
-  lastItemRef: Ref<HTMLDivElement>;
+  lastItemRef: Ref<HTMLTextAreaElement>;
   column: ColumnType;
   handleItemRemove: (itemId: string) => void;
-  handleItemInput: (e: React.ChangeEvent<HTMLDivElement>, itemId: string) => void;
-  handleNewItemInput: (e: React.ChangeEvent<HTMLDivElement>) => void;
-  handleItemBlur: (e: React.ChangeEvent<HTMLDivElement>) => void;
+  handleItemChange: (e: React.ChangeEvent<HTMLTextAreaElement>, itemId: string) => void;
+  handleNewItemChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleCheckboxChange: (itemId: string, value: boolean) => void;
   handleColumnTitleBlur: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
   deleteShoppingList: (id: string) => Promise<void>;
@@ -51,14 +50,13 @@ const Column: FC<Props> = (props) => {
               <ItemList
                 itemList={props.itemList}
                 isDesktop={props.isDesktop}
-                handleItemInput={props.handleItemInput}
+                handleItemChange={props.handleItemChange}
                 handleItemRemove={props.handleItemRemove}
-                handleItemBlur={props.handleItemBlur}
                 handleCheckboxChange={props.handleCheckboxChange}
                 lastItemRef={props.lastItemRef}
               />
               {provided.placeholder}
-              <NewItem handleNewItemInput={props.handleNewItemInput} />
+              <NewItem handleNewItemChange={props.handleNewItemChange} />
             </div>
           );
         }}
