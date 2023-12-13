@@ -15,5 +15,3 @@ export interface Column {
   id: string;
   title: string;
 }
-
-export type SelectionType = { start: number; end: number } | null;

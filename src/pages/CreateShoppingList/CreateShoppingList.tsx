@@ -56,6 +56,7 @@ const CreateShoppingListPage: FC = () => {
           setShoppingListName(e.target.value);
         }}
         required
+        autoFocus
       />
       <Button type="submit" variant="contained" disabled={isButtonDisabled}>
         Create

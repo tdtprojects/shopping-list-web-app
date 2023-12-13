@@ -26,24 +26,34 @@
 }
 
 .content {
-  min-height: 29px;
-  padding: 5px 45px 5px 65px;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5rem;
-  text-align: start;
-  outline: none;
-  border-top: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-
-  &__isChecked {
-    text-decoration: line-through;
-    color: rgb(85, 85, 85);
+  fieldset {
+    border: none;
   }
 
-  &:focus {
-    border-top: 1px solid rgba(0, 0, 0, 0.15);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  & > div {
+    min-height: 29px;
+    font-size: 1rem;
+    padding: 5px 45px 5px 65px;
+    color: #555;
+    font-weight: 400;
+    line-height: 1.5rem;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    border-radius: 0;
+  }
+
+  &__isChecked {
+    & > div {
+      text-decoration: line-through;
+      color: rgb(85, 85, 85);
+    }
+  }
+
+  &__isFocused {
+    & > div {
+      border-top: 1px solid rgba(0, 0, 0, 0.15);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    }
   }
 }
 

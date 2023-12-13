@@ -1,30 +1,43 @@
-import type { FC } from "react";
+import { type FC, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
+import TextField from "@mui/material/TextField";
+import classNames from "classnames";
 
-import { preventControlCommandEnterKeyDown } from "@/shared/utils";
 import styles from "./styles.module.scss";
 
 interface Props {
-  handleNewItemInput: (e: React.ChangeEvent<HTMLDivElement>) => void;
+  handleNewItemChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 const NewItem: FC<Props> = (props) => {
+  const [isTextFieldFocused, setIsTextFieldFocused] = useState(false);
+
+  const handleBlur = (): void => {
+    setIsTextFieldFocused(false);
+  };
+
+  const handleFocus = (): void => {
+    setIsTextFieldFocused(true);
+  };
+
+  const contentClassList = classNames(styles.content, {
+    [styles.content__isFocused]: isTextFieldFocused,
+  });
+
   return (
     <div className={styles.root}>
       <span className={styles.plusIconWrapper}>
         <AddIcon />
       </span>
-      <div
-        className={styles.content}
-        contentEditable="true"
-        aria-multiline="true"
-        spellCheck="false"
-        suppressContentEditableWarning={true}
-        onInput={props.handleNewItemInput}
-        // Temporary bug fix
-        onKeyDown={preventControlCommandEnterKeyDown}
+      <TextField
+        multiline
+        fullWidth
+        className={contentClassList}
+        onChange={props.handleNewItemChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        placeholder="List item"
       />
-      <span className={styles.placeholder}>List item</span>
     </div>
   );
 };
