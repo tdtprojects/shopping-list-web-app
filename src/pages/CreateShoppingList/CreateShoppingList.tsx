@@ -6,7 +6,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import classNames from "classnames";
 
 import { API_URL } from "@/shared/config";
-import styles from "./styles.module.scss";
+import styles from "./CreateShoppingList.module.scss";
 
 const CreateShoppingListPage: FC = () => {
   const theme = useTheme();
