@@ -7,7 +7,7 @@ import classNames from "classnames";
 import type { ShoppingListItem } from "@/shared/types";
 
 import Checkbox from "./Checkbox";
-import styles from "./styles.module.scss";
+import styles from "./Item.module.scss";
 
 interface Props {
   item: ShoppingListItem;

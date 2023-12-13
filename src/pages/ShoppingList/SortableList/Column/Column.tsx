@@ -8,7 +8,7 @@ import StrictModeDroppable from "./StrictModeDroppable";
 import ItemList from "./ItemList";
 import NewItem from "./ItemList/NewItem";
 import Header from "./Header";
-import styles from "./styles.module.scss";
+import styles from "./Column.module.scss";
 
 interface Props {
   itemList: ShoppingListItem[];

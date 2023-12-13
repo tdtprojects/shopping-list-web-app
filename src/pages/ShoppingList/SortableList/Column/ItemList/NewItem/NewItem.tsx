@@ -3,7 +3,7 @@ import AddIcon from "@mui/icons-material/Add";
 import TextField from "@mui/material/TextField";
 import classNames from "classnames";
 
-import styles from "./styles.module.scss";
+import styles from "./NewItem.module.scss";
 
 interface Props {
   handleNewItemChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;

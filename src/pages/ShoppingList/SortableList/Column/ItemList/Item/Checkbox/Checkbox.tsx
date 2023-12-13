@@ -1,6 +1,6 @@
 import { type FC, useCallback } from "react";
 
-import styles from "./styles.module.scss";
+import styles from "./Checkbox.module.scss";
 
 interface Props {
   id: string;

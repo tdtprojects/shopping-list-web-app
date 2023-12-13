@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { API_URL } from "@/shared/config";
 import type { ShoppingList } from "@/shared/types";
 
-import styles from "./styles.module.scss";
+import styles from "./Home.module.scss";
 import Lists from "./Lists";
 
 const HomePage: FC = () => {

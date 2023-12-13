@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 
 import type { ShoppingList } from "@/shared/types";
 
-import styles from "./styles.module.scss";
+import styles from "./Lists.module.scss";
 
 interface Props {
   shoppingLists: ShoppingList[];
