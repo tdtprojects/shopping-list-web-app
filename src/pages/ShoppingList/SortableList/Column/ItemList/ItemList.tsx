@@ -10,6 +10,7 @@ interface Props {
   handleItemChange: (e: React.ChangeEvent<HTMLTextAreaElement>, itemId: string) => void;
   handleItemRemove: (itemId: string) => void;
   handleCheckboxChange: (itemId: string, value: boolean) => void;
+  handleItemKeyDown: (event: React.KeyboardEvent<HTMLDivElement>, itemId: string) => void;
 }
 
 const ItemList: FC<Props> = (props: Props) => {
@@ -24,6 +25,7 @@ const ItemList: FC<Props> = (props: Props) => {
       handleCheckboxChange={props.handleCheckboxChange}
       isLast={index === props.itemList.length - 1}
       lastItemRef={props.lastItemRef}
+      handleItemKeyDown={props.handleItemKeyDown}
     />
   ));
 };

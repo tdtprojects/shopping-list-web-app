@@ -4,9 +4,9 @@ import TextField from "@mui/material/TextField";
 
 import type { ShoppingListItem, Column as ColumnType } from "@/shared/types";
 
-import NewItem from "./ItemList/NewItem";
 import StrictModeDroppable from "./StrictModeDroppable";
 import ItemList from "./ItemList";
+import NewItem from "./ItemList/NewItem";
 import Header from "./Header";
 import styles from "./styles.module.scss";
 
@@ -20,6 +20,7 @@ interface Props {
   handleNewItemChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleCheckboxChange: (itemId: string, value: boolean) => void;
   handleColumnTitleBlur: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
+  handleItemKeyDown: (event: React.KeyboardEvent<HTMLDivElement>, itemId: string) => void;
   deleteShoppingList: (id: string) => Promise<void>;
 }
 
@@ -53,6 +54,7 @@ const Column: FC<Props> = (props) => {
                 handleItemChange={props.handleItemChange}
                 handleItemRemove={props.handleItemRemove}
                 handleCheckboxChange={props.handleCheckboxChange}
+                handleItemKeyDown={props.handleItemKeyDown}
                 lastItemRef={props.lastItemRef}
               />
               {provided.placeholder}

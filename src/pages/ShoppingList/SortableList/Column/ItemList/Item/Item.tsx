@@ -18,12 +18,13 @@ interface Props {
   handleItemChange: (e: React.ChangeEvent<HTMLTextAreaElement>, itemId: string) => void;
   handleItemRemove: (itemId: string) => void;
   handleCheckboxChange: (itemId: string, value: boolean) => void;
+  handleItemKeyDown: (event: React.KeyboardEvent<HTMLDivElement>, itemId: string) => void;
 }
 
 const Item: FC<Props> = (props) => {
   const [isTextFieldFocused, setIsTextFieldFocused] = useState(false);
 
-  const { handleItemRemove, handleItemChange, item } = props;
+  const { handleItemRemove, handleItemChange, handleItemKeyDown, item } = props;
 
   const handleRemove = useCallback(() => {
     handleItemRemove(item.id);
@@ -43,6 +44,13 @@ const Item: FC<Props> = (props) => {
   const handleFocus = (): void => {
     setIsTextFieldFocused(true);
   };
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      handleItemKeyDown(event, item.id);
+    },
+    [handleItemKeyDown, item]
+  );
 
   const dragIconWrapperClassList = classNames(styles.dragIconWrapper, {
     [styles.dragIconWrapper__isDesktop]: props.isDesktop,
@@ -90,6 +98,7 @@ const Item: FC<Props> = (props) => {
               onChange={handleChange}
               onBlur={handleBlur}
               onFocus={handleFocus}
+              onKeyDown={handleKeyDown}
               inputRef={props.isLast ? props.lastItemRef : null}
             />
             <span className={styles.closeIconWrapper}>

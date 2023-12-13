@@ -1,6 +1,6 @@
 import { type FC, useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { DragDropContext, type DropResult } from "react-beautiful-dnd";
-import { v4 } from "uuid";
+import { v4, validate as validateV4 } from "uuid";
 import { debounce, isNil } from "lodash";
 
 import type { ShoppingListItem, Column as ColumnType } from "@/shared/types";
@@ -147,6 +147,20 @@ const SortableList: FC<Props> = (props) => {
     updateShoppingList(updatedShoppingListItems);
   };
 
+  const handleItemKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, itemId: string): void => {
+    if (event.metaKey && event.key === "z") {
+      const isItemNew = validateV4(itemId);
+      const target = event.target as HTMLTextAreaElement;
+
+      if (isItemNew && target.value.length === 1) {
+        const updatedShoppingListItems = shoppingListItems.filter((item) => item.id !== itemId);
+
+        setShoppingListItems(updatedShoppingListItems);
+        updateShoppingList(updatedShoppingListItems);
+      }
+    }
+  };
+
   const handleColumnTitleBlur = (event: React.FocusEvent<HTMLTextAreaElement>): void => {
     const title = event.target.value;
 
@@ -166,6 +180,7 @@ const SortableList: FC<Props> = (props) => {
         handleCheckboxChange={handleCheckboxChange}
         handleColumnTitleBlur={handleColumnTitleBlur}
         deleteShoppingList={props.deleteShoppingList}
+        handleItemKeyDown={handleItemKeyDown}
         lastItemRef={lastItemRef}
       />
     </DragDropContext>
