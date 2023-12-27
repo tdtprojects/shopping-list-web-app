@@ -1,3 +1,11 @@
+.root {
+  padding-top: 1rem;
+
+  &__isDesktop {
+    padding-top: 6rem;
+  }
+}
+
 .title {
   text-align: center;
   font-weight: 300;
@@ -17,4 +25,11 @@
   &__isDesktop {
     margin-top: 50px;
   }
+}
+
+.progressWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
