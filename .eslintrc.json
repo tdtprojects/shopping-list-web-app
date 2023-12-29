@@ -19,6 +19,7 @@
     "@typescript-eslint/semi": ["error", "always"],
     "@typescript-eslint/quotes": ["error", "double"],
     "@typescript-eslint/comma-dangle": ["error", "only-multiline"],
+    "multiline-ternary": ["error", "never"],
     "@typescript-eslint/member-delimiter-style": [
       "error",
       {

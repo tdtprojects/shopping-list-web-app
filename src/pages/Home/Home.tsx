@@ -1,6 +1,6 @@
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import classNames from "classnames";
 import { type FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,8 @@ const HomePage: FC = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
   const navigate = useNavigate();
-  const [shoppingLists, setShoppingLists] = useState<ShoppingList[]>();
+  const [shoppingLists, setShoppingLists] = useState<ShoppingList[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchShoppingLists = async (): Promise<void> => {
@@ -28,6 +29,8 @@ const HomePage: FC = () => {
         setShoppingLists(result);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -55,28 +58,32 @@ const HomePage: FC = () => {
     navigate("/shopping-list/new");
   };
 
+  const rootClassList = classNames(styles.root, {
+    [styles.root__isDesktop]: isDesktop,
+  });
   const titleClassList = classNames(styles.title, {
     [styles.title__isDesktop]: isDesktop,
   });
-
   const buttonWrapperClassList = classNames(styles.buttonWrapper, {
     [styles.buttonWrapper__isDesktop]: isDesktop,
   });
 
-  return (
-    Array.isArray(shoppingLists) && (
-      <>
-        <h1 className={titleClassList}>
-          Welcome to the Shopping List app! Create lists and share them with friends using the link
-        </h1>
-        <div className={buttonWrapperClassList}>
-          <Button variant="contained" onClick={handleButtonClick}>
-            Create a new shopping list
-          </Button>
-        </div>
-        <Lists shoppingLists={shoppingLists} handleUnpinShoppingList={handleUnpinShoppingList} />
-      </>
-    )
+  return isLoading ? (
+    <div className={styles.progressWrapper}>
+      <CircularProgress />
+    </div>
+  ) : (
+    <div className={rootClassList}>
+      <h1 className={titleClassList}>
+        Welcome to the Shopping List app! Create lists and share them with friends using the link
+      </h1>
+      <div className={buttonWrapperClassList}>
+        <Button variant="contained" onClick={handleButtonClick}>
+          Create a new shopping list
+        </Button>
+      </div>
+      <Lists shoppingLists={shoppingLists} handleUnpinShoppingList={handleUnpinShoppingList} />
+    </div>
   );
 };
 

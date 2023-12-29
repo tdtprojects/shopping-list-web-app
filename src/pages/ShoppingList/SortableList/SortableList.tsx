@@ -34,9 +34,9 @@ const SortableList: FC<Props> = (props) => {
   );
 
   useEffect(() => {
-    const hasNewShoppingItemAdded = isFirstRender.current
-      ? false
-      : shoppingListItems.length > Number(prevShoppingListItemsRef?.current?.length);
+    const hasNewShoppingItemAdded = isFirstRender.current ? false : (
+      shoppingListItems.length > Number(prevShoppingListItemsRef?.current?.length)
+    );
 
     if (hasNewShoppingItemAdded && !isNil(lastItemRef.current)) {
       const { length } = lastItemRef.current.value;
