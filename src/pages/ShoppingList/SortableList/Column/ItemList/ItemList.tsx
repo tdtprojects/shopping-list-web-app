@@ -1,4 +1,4 @@
-import { type FC, type Ref, memo } from "react";
+import { type FC, type MutableRefObject, memo } from "react";
 
 import type { ShoppingListItem } from "@/shared/types";
 import Item from "./Item";
@@ -6,7 +6,7 @@ import Item from "./Item";
 interface Props {
   itemList: ShoppingListItem[];
   isDesktop: boolean;
-  lastItemRef: Ref<HTMLTextAreaElement>;
+  itemsRefs: MutableRefObject<HTMLTextAreaElement[]>;
   handleItemChange: (e: React.ChangeEvent<HTMLTextAreaElement>, itemId: string) => void;
   handleItemRemove: (itemId: string) => void;
   handleCheckboxChange: (itemId: string, value: boolean) => void;
@@ -23,9 +23,8 @@ const ItemList: FC<Props> = (props: Props) => {
       handleItemChange={props.handleItemChange}
       handleItemRemove={props.handleItemRemove}
       handleCheckboxChange={props.handleCheckboxChange}
-      isLast={index === props.itemList.length - 1}
-      lastItemRef={props.lastItemRef}
       handleItemKeyDown={props.handleItemKeyDown}
+      itemsRefs={props.itemsRefs}
     />
   ));
 };

@@ -20,11 +20,9 @@ interface Props {
 const SortableList: FC<Props> = (props) => {
   const [shoppingListItems, setShoppingListItems] = useState<ShoppingListItem[]>(props.itemList);
   const prevShoppingListItemsRef = useRef<ShoppingListItem[]>([]);
-  const lastItemRef = useRef<HTMLTextAreaElement>(null);
+  const itemsRefs = useRef<HTMLTextAreaElement[]>([]);
   const isFirstRender = useRef(true);
-  const { shoppingListId, title } = props;
-
-  const { updateShoppingListItems } = props;
+  const { shoppingListId, title, updateShoppingListItems } = props;
   const column: ColumnType = useMemo(
     () => ({
       id: shoppingListId,
@@ -34,18 +32,20 @@ const SortableList: FC<Props> = (props) => {
   );
 
   useEffect(() => {
-    const hasNewShoppingItemAdded = isFirstRender.current ? false : (
-      shoppingListItems.length > Number(prevShoppingListItemsRef?.current?.length)
+    const newItem = isFirstRender.current ? null : (
+      shoppingListItems.find((item) => !prevShoppingListItemsRef.current.some(({ id }) => id === item.id))
     );
 
-    if (hasNewShoppingItemAdded && !isNil(lastItemRef.current)) {
-      const { length } = lastItemRef.current.value;
+    if (!isNil(newItem)) {
+      const newItemRef = itemsRefs.current[newItem.order - 1];
+      const { length } = newItemRef.value;
 
-      lastItemRef.current.focus();
-      lastItemRef.current.setSelectionRange(length, length);
+      newItemRef.focus();
+      newItemRef.setSelectionRange(length, length);
     }
 
     prevShoppingListItemsRef.current = shoppingListItems;
+    itemsRefs.current = itemsRefs.current.slice(0, shoppingListItems.length);
   }, [shoppingListItems]);
 
   useEffect(() => {
@@ -135,7 +135,7 @@ const SortableList: FC<Props> = (props) => {
 
     const newItem = {
       checked: false,
-      text: event.target.value,
+      text: event.target.value.trim(),
       id: v4(),
       order: maxOrder + 1,
     };
@@ -148,15 +148,58 @@ const SortableList: FC<Props> = (props) => {
   };
 
   const handleItemKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, itemId: string): void => {
+    const target = event.target as HTMLTextAreaElement;
+
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+
+      const item = shoppingListItems.find((item) => item.id === itemId) as ShoppingListItem;
+      const newItem = {
+        checked: false,
+        text: "",
+        id: v4(),
+        order: item.order + 1,
+      };
+      const updatedShoppingListItems = shoppingListItems.reduce((result: ShoppingListItem[], currentValue) => {
+        if (currentValue.order === item.order) {
+          return [...result, currentValue, newItem];
+        }
+
+        if (currentValue.order < item.order) {
+          return [...result, currentValue];
+        } else {
+          return [...result, { ...currentValue, order: currentValue.order + 1 }];
+        }
+      }, []);
+
+      setShoppingListItems(updatedShoppingListItems);
+      updateShoppingList(updatedShoppingListItems);
+    }
+
     if (event.metaKey && event.key === "z") {
       const isItemNew = validateV4(itemId);
-      const target = event.target as HTMLTextAreaElement;
 
       if (isItemNew && target.value.length === 1) {
         const updatedShoppingListItems = shoppingListItems.filter((item) => item.id !== itemId);
 
         setShoppingListItems(updatedShoppingListItems);
         updateShoppingList(updatedShoppingListItems);
+      }
+    }
+
+    if (event.key === "Backspace" && target.value.length === 0) {
+      event.preventDefault();
+
+      const item = shoppingListItems.find(({ id }) => id === itemId) as ShoppingListItem;
+      const prevItemRef = itemsRefs.current[item.order - 2];
+
+      handleItemRemove(itemId);
+
+      if (!isNil(prevItemRef)) {
+        const { length } = prevItemRef.value;
+
+        prevItemRef.focus();
+        prevItemRef.setSelectionRange(length, length);
       }
     }
   };
@@ -181,7 +224,7 @@ const SortableList: FC<Props> = (props) => {
         handleColumnTitleBlur={handleColumnTitleBlur}
         deleteShoppingList={props.deleteShoppingList}
         handleItemKeyDown={handleItemKeyDown}
-        lastItemRef={lastItemRef}
+        itemsRefs={itemsRefs}
       />
     </DragDropContext>
   );

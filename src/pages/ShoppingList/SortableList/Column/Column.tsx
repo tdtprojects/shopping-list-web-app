@@ -1,4 +1,4 @@
-import { type FC, type Ref } from "react";
+import { type FC, type MutableRefObject } from "react";
 import classNames from "classnames";
 import TextField from "@mui/material/TextField";
 
@@ -13,7 +13,7 @@ import styles from "./Column.module.scss";
 interface Props {
   itemList: ShoppingListItem[];
   isDesktop: boolean;
-  lastItemRef: Ref<HTMLTextAreaElement>;
+  itemsRefs: MutableRefObject<HTMLTextAreaElement[]>;
   column: ColumnType;
   handleItemRemove: (itemId: string) => void;
   handleItemChange: (e: React.ChangeEvent<HTMLTextAreaElement>, itemId: string) => void;
@@ -55,7 +55,7 @@ const Column: FC<Props> = (props) => {
                 handleItemRemove={props.handleItemRemove}
                 handleCheckboxChange={props.handleCheckboxChange}
                 handleItemKeyDown={props.handleItemKeyDown}
-                lastItemRef={props.lastItemRef}
+                itemsRefs={props.itemsRefs}
               />
               {provided.placeholder}
               <NewItem handleNewItemChange={props.handleNewItemChange} />

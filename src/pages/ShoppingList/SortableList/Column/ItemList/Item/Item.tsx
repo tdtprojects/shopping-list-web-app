@@ -1,4 +1,4 @@
-import { type FC, type Ref, useState, useCallback } from "react";
+import { type FC, type MutableRefObject, useState, useCallback } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { DragIndicator, Close } from "@mui/icons-material";
 import TextField from "@mui/material/TextField";
@@ -13,8 +13,7 @@ interface Props {
   item: ShoppingListItem;
   index: number;
   isDesktop: boolean;
-  isLast: boolean;
-  lastItemRef: Ref<HTMLTextAreaElement>;
+  itemsRefs: MutableRefObject<HTMLTextAreaElement[]>;
   handleItemChange: (e: React.ChangeEvent<HTMLTextAreaElement>, itemId: string) => void;
   handleItemRemove: (itemId: string) => void;
   handleCheckboxChange: (itemId: string, value: boolean) => void;
@@ -99,7 +98,9 @@ const Item: FC<Props> = (props) => {
               onBlur={handleBlur}
               onFocus={handleFocus}
               onKeyDown={handleKeyDown}
-              inputRef={props.isLast ? props.lastItemRef : null}
+              inputRef={(element) => {
+                props.itemsRefs.current[props.index] = element;
+              }}
             />
             <span className={styles.closeIconWrapper}>
               <Close onClick={handleRemove} />
