@@ -135,7 +135,7 @@ const SortableList: FC<Props> = (props) => {
 
     const newItem = {
       checked: false,
-      text: event.target.value,
+      text: event.target.value.trim(),
       id: v4(),
       order: maxOrder + 1,
     };
