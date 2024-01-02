@@ -148,6 +148,8 @@ const SortableList: FC<Props> = (props) => {
   };
 
   const handleItemKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, itemId: string): void => {
+    const target = event.target as HTMLTextAreaElement;
+
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
 
@@ -176,13 +178,28 @@ const SortableList: FC<Props> = (props) => {
 
     if (event.metaKey && event.key === "z") {
       const isItemNew = validateV4(itemId);
-      const target = event.target as HTMLTextAreaElement;
 
       if (isItemNew && target.value.length === 1) {
         const updatedShoppingListItems = shoppingListItems.filter((item) => item.id !== itemId);
 
         setShoppingListItems(updatedShoppingListItems);
         updateShoppingList(updatedShoppingListItems);
+      }
+    }
+
+    if (event.key === "Backspace" && target.value.length === 0) {
+      event.preventDefault();
+
+      const item = shoppingListItems.find(({ id }) => id === itemId) as ShoppingListItem;
+      const prevItemRef = itemsRefs.current[item.order - 2];
+
+      handleItemRemove(itemId);
+
+      if (!isNil(prevItemRef)) {
+        const { length } = prevItemRef.value;
+
+        prevItemRef.focus();
+        prevItemRef.setSelectionRange(length, length);
       }
     }
   };
